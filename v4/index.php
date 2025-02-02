@@ -1,7 +1,5 @@
 <?php session_start(); ?>
-<!-- Zu Löschen bei Releas von V4 -->
-<?php include("./auth-app/is-login.php"); ?>
-<!-- Zu Löschen bei Releas von V4 -->
+<?php require_once("./auth/login-checker.php"); ?>
 
 
 <?php $filePath = "../version.txt"; ?>
