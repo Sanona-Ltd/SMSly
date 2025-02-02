@@ -1,7 +1,4 @@
-<?php session_start(); ?>
-<?php include("../v4/auth-app/is-login.php"); ?>
-<?php $dateipfad = "../version.txt"; ?>
-<?php $visitor_ip = $_SERVER['REMOTE_ADDR']; ?>
+<?php require_once("../auth/login-checker.php"); ?>
 
 
 <!DOCTYPE html>

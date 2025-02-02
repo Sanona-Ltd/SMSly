@@ -1,11 +1,5 @@
-<?php session_start(); ?>
 <?php require_once("./auth/login-checker.php"); ?>
 
-
-<?php $filePath = "../version.txt"; ?>
-<?php $SystemVersion = file_get_contents($filePath); ?>
-<?php // include("../$SystemVersion/auth-app/is-login.php"); 
-?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme">
