@@ -1,16 +1,22 @@
 <?php
+// Session starten (falls noch nicht geschehen)
+session_start();
 
+// Log schreiben
+sendLogAsync('user.logout', $_SESSION["user_id"], 'signout.default', 'The user has successfully logged out');
 
-// Pfad zur Datei
-$dateipfad = "../version.txt";
-$inhalt = file_get_contents($dateipfad);
+// Alle Session-Variablen löschen
+$_SESSION = array();
 
-// To Delet after V4 Releas
-$inhalt = "v4";
+// Session-Cookie löschen
+if (isset($_COOKIE[session_name()])) {
+    setcookie(session_name(), '', time()-42000, '/');
+}
 
+// Session zerstören
+session_destroy();
 
-
-// Weiterleitung
-header("Location: /$inhalt/auth-app/logout.php");
+// Weiterleitung zur Hauptseite
+header("Location: ../");
 exit;
 ?>
