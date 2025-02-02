@@ -1,4 +1,4 @@
-<?php require_once("../auth/login-checker.php"); ?>
+<?php require_once("./auth/login-checker.php"); ?>
 
 
 <!DOCTYPE html>
