@@ -1,4 +1,6 @@
 <?php
+include_once 'log/send-logs.php';
+
 // Session starten (falls noch nicht geschehen)
 session_start();
 
