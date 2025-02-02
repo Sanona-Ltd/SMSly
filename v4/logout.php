@@ -2,8 +2,11 @@
 // Session starten (falls noch nicht geschehen)
 session_start();
 
+// User-ID aus Session holen
+$user_id = $_SESSION["user_id"];
+
 // Log schreiben
-sendLogAsync('user.logout', $_SESSION["user_id"], 'signout.default', 'The user has successfully logged out');
+sendLogAsync('user.logout', $user_id, 'signout.default', 'The user has successfully logged out');
 
 // Alle Session-Variablen löschen
 $_SESSION = array();
