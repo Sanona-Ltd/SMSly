@@ -1,0 +1,22 @@
+# Verhindere den Zugriff auf alle Dateien im Verzeichnis
+Order deny,allow
+Deny from all
+
+# Verhindere die Anzeige des Verzeichnisinhalts
+Options -Indexes
+
+# Verhindere den Zugriff auf PHP-Dateien
+<FilesMatch "\.php$">
+    Deny from all
+</FilesMatch>
+
+# Verhindere die Ausführung von PHP-Dateien
+<Files *>
+    php_flag engine off
+</Files>
+
+# Zusätzliche Sicherheit: Blockiere den Zugriff auf versteckte Dateien
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch> 
