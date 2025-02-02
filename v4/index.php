@@ -51,12 +51,11 @@
                           <img src="./assets/images/icon.png" alt="" width="40" height="40">
                         </div>
                         <h5 class="fw-semibold mb-0 fs-5">Welcome back
-                          <?php // Prüfen Sie, ob 'first_name' und 'last_name' gesetzt sind und nicht leer sind
+                          <?php
                             if (!empty($GLOBALS["USER_NAME"]) && !empty($GLOBALS["USER_SURNAME"])) {
                               echo $GLOBALS["USER_NAME"] . " " . $GLOBALS["USER_SURNAME"];
                             } else {
-                              // Wenn sie leer sind, geben Sie nur die E-Mail aus
-                              echo $$GLOBALS["USER_EMAIL"];
+                              echo $GLOBALS["USER_EMAIL"];
                             }
                           ?>!
                         </h5>
