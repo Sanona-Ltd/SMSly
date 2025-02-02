@@ -30,8 +30,10 @@ if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) {
 } else {
     // Benutzer ist nicht angemeldet
     
-    // Aktuelle URL für Callback erfassen
-    $current_url = urlencode($_SERVER['REQUEST_URI']);
+    // Aktuelle URL für Callback erfassen, v4/ aus Pfad entfernen
+    $current_url = $_SERVER['REQUEST_URI'];
+    $current_url = str_replace('/v4/', '/', $current_url);
+    $current_url = urlencode($current_url);
     
     // Zur Login-Seite weiterleiten mit Callback
     header("Location: /v4/sign-in.php?callback=" . $current_url);
