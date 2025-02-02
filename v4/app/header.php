@@ -102,13 +102,15 @@
                                         <img src="./assets/images/icon.png" class="rounded-circle" width="80"
                                             height="80" alt="" />
                                         <div class="ms-3">
-                                            <h5 class="mb-1 fs-3"><?php // Prüfen Sie, ob 'first_name' und 'last_name' gesetzt sind und nicht leer sind
-                                            if (!empty($_SESSION['first_name']) && !empty($_SESSION['last_name'])) {
-                                                echo $_SESSION['first_name'] . " " . $_SESSION['last_name'];
-                                            } else {
-                                                // Wenn sie leer sind, geben Sie nur die E-Mail aus
-                                                echo $_SESSION['email'];
-                                            } ?></h5>
+                                            <h5 class="mb-1 fs-3">
+                                                <?php
+                                                    if (!empty($GLOBALS_USER_NAME) && !empty($GLOBALS_USER_SURNAME)) {
+                                                        echo $GLOBALS_USER_NAME . " " . $GLOBALS_USER_SURNAME;
+                                                    } else {
+                                                        echo $GLOBALS_USER_EMAIL;
+                                                    }
+                                                ?>
+                                            </h5>
                                             <p class="mb-0 d-flex align-items-center gap-2">
                                                 <i class="ti ti-mail fs-4"></i> <?php echo $_SESSION['email']; ?>
                                             </p>
@@ -257,11 +259,11 @@
                                         <div class="ms-3">
                                             <h5 class="mb-1 fs-3">
                                                 <?php
-                                                    if (!empty($GLOBALS_USER_NAME) && !empty($GLOBALS_USER_SURNAME)) {
-                                                        echo $GLOBALS_USER_NAME . " " . $GLOBALS_USER_SURNAME;
-                                                    } else {
-                                                        echo $GLOBALS_USER_EMAIL;
-                                                    }
+                                                if (!empty($GLOBALS_USER_NAME) && !empty($GLOBALS_USER_SURNAME)) {
+                                                    echo $GLOBALS_USER_NAME . " " . $GLOBALS_USER_SURNAME;
+                                                } else {
+                                                    echo $GLOBALS_USER_EMAIL;
+                                                }
                                                 ?>
                                             </h5>
                                             <p class="mb-0 d-flex align-items-center gap-2">
