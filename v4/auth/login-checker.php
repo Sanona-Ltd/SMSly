@@ -6,26 +6,32 @@ if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) {
     // Benutzer ist angemeldet - Globale Variablen setzen
     
     // User-Daten
-    $GLOBALS["GLOBAL_VARIABLE_USER_ID"] = $_SESSION["user_id"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_EMAIL"] = $_SESSION["email"];
+    $GLOBALS["USER_ID"] = $_SESSION["user_id"];
+    $GLOBALS["USER_EMAIL"] = $_SESSION["email"];
     
     // Namen
-    $GLOBALS["GLOBAL_VARIABLE_USER_USERNAME"] = $_SESSION["username"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_NAME"] = $_SESSION["name"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_SURNAME"] = $_SESSION["surname"];
+    $GLOBALS["USER_USERNAME"] = $_SESSION["username"];
+    $GLOBALS["USER_NAME"] = $_SESSION["name"];
+    $GLOBALS["USER_SURNAME"] = $_SESSION["surname"];
     
     // Adresse
-    $GLOBALS["GLOBAL_VARIABLE_USER_STREET"] = $_SESSION["street"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_NUMBER"] = $_SESSION["number"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_ZIPCODE"] = $_SESSION["zip_code"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_CITY"] = $_SESSION["city"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_COUNTRY"] = $_SESSION["country"];
+    $GLOBALS["USER_STREET"] = $_SESSION["street"];
+    $GLOBALS["USER_NUMBER"] = $_SESSION["number"];
+    $GLOBALS["USER_ZIPCODE"] = $_SESSION["zip_code"];
+    $GLOBALS["USER_CITY"] = $_SESSION["city"];
+    $GLOBALS["USER_COUNTRY"] = $_SESSION["country"];
     
     // Sicherheit & Berechtigungen
-    $GLOBALS["GLOBAL_VARIABLE_USER_CANLOGIN"] = $_SESSION["can_login"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_SMSCONTINGENT"] = $_SESSION["sms_contingent"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_OWNSENDER"] = $_SESSION["own_sender"];
-    $GLOBALS["GLOBAL_VARIABLE_USER_RANK"] = $_SESSION["rank"];
+    $GLOBALS["USER_CANLOGIN"] = $_SESSION["can_login"];
+    $GLOBALS["USER_REASON"] = $_SESSION["reason"];
+    $GLOBALS["USER_SMSCONTINGENT"] = $_SESSION["sms_contingent"];
+    $GLOBALS["USER_OWNSENDER"] = $_SESSION["own_sender"];
+    $GLOBALS["USER_RANK"] = $_SESSION["rank"];
+    
+    // Zusätzliche Variablen
+    $GLOBALS["USER_VERIFIED"] = $_SESSION["verified"];
+    $GLOBALS["USER_API_KEY"] = $_SESSION["api_key"];
+    $GLOBALS["USER_API_SECRET"] = $_SESSION["api_secret"];
 
 } else {
     // Benutzer ist nicht angemeldet

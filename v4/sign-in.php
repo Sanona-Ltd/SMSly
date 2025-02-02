@@ -1,107 +1,170 @@
 <?php
 session_start();
 
-// Hilfsfunktion für die Fehlerbehandlung
-function handleLoginError($code, $text = '') {
-    $_SESSION["login_error_code"] = $code;
-    if ($text) {
-        $_SESSION["login_error_text"] = $text;
-    }
+// Konfigurationsdatei einbinden
+require_once 'config/config.php';
+
+// CSRF-Token generieren
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 
-// Hauptanmeldungslogik
-function processLogin($email, $password) {
-    $curl = curl_init();
+class LoginManager {
+    private $api_url;
+    private $api_token;
     
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user?where[email]=' . urlencode($email) . '&timestamps',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'GET',
-        CURLOPT_HTTPHEADER => array(
-            'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
-        ),
-    ));
-
-    $response = curl_exec($curl);
-    
-    if (curl_errno($curl)) {
-        echo 'Curl error: ' . curl_error($curl);
-        curl_close($curl);
-        exit;
+    public function __construct() {
+        $this->api_url = API_URL;
+        $this->api_token = API_TOKEN;
     }
-    curl_close($curl);
 
-    return json_decode($response);
-}
+    public function handleLoginError($code, $text = '') {
+        $_SESSION["login_error_code"] = $code;
+        if ($text) {
+            $_SESSION["login_error_text"] = $text;
+        }
+        return false;
+    }
 
-// Sitzungsvariablen setzen
-function setSessionVariables($user) {
-    // User
-    $_SESSION["user_id"] = $user->id;
-    $_SESSION["email"] = $user->email;
+    public function validateInput($email, $password) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $this->handleLoginError("00.199.04", "Ungültige E-Mail-Adresse");
+        }
+        if (strlen($password) < 8) {
+            return $this->handleLoginError("00.199.05", "Passwort zu kurz");
+        }
+        return true;
+    }
 
-    // Names
-    $_SESSION["username"] = $user->username;
-    $_SESSION["name"] = $user->name;
-    $_SESSION["surname"] = $user->surname;
-
-    // Address
-    $_SESSION["street"] = $user->street;
-    $_SESSION["number"] = $user->number;
-    $_SESSION["zip_code"] = $user->{'zip-code'};
-    $_SESSION["city"] = $user->city;
-    $_SESSION["country"] = $user->country;
-
-    // Security
-    $_SESSION["can_login"] = $user->{'can-login'};
-    $_SESSION["sms_contingent"] = $user->{'sms_contingent'};
-    $_SESSION["own_sender"] = $user->{'own-sender'};
-    $_SESSION["rank"] = $user->rank;
-}
-
-// Anmeldungsverarbeitung
-if (isset($_POST["email"]) && isset($_POST["password"]) && !empty($_POST["email"]) && !empty($_POST["password"])) {
-    $data = processLogin($_POST["email"], $_POST["password"]);
-
-    if ($data === null) {
-        echo "Fehler beim Parsen des JSON-Strings.";
-    } else {
-        $user = $data[0];
+    public function processLogin($email, $password) {
+        $curl = curl_init();
         
-        if (password_verify($_POST["password"], $user->password)) {
-            switch ($user->{'can-login'}) {
-                case "Allowed":
-                    setSessionVariables($user);
-                    
-                    // Callback-Verarbeitung
-                    if (isset($_GET['callback']) && !empty($_GET['callback'])) {
-                        header("Location: " . $_GET['callback']);
-                    } else {
-                        header("Location: ./");
-                    }
-                    break;
-                    
-                case "Disallowed":
-                    handleLoginError("00.200.01");
-                    break;
-                    
-                case "Fraud":
-                    handleLoginError("00.200.02", $user->reason);
-                    break;
-                    
-                case "Review":
-                    handleLoginError("00.200.03", $user->reason);
-                    break;
-            }
-        } else {
-            handleLoginError("00.199.01");
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $this->api_url . '/user?where[email]=' . urlencode($email) . '&timestamps',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => [
+                'Authorization: Bearer ' . $this->api_token
+            ],
+            CURLOPT_SSL_VERIFYPEER => true,
+        ]);
+
+        $response = curl_exec($curl);
+        
+        if (curl_errno($curl)) {
+            $error = curl_error($curl);
+            curl_close($curl);
+            error_log("Login API Error: " . $error);
+            return $this->handleLoginError("00.199.06", "Serverfehler");
+        }
+        
+        curl_close($curl);
+        return json_decode($response);
+    }
+
+    public function setSessionVariables($user) {
+        $sessionVars = [
+            "user_id" => $user->id,
+            "email" => $user->email,
+            "username" => $user->username,
+            "name" => $user->name,
+            "surname" => $user->surname,
+            "street" => $user->street,
+            "number" => $user->number,
+            "zip_code" => $user->{'zip-code'},
+            "city" => $user->city,
+            "country" => $user->country,
+            "can_login" => $user->{'can-login'},
+            "reason" => $user->reason,
+            "sms_contingent" => $user->sms_contingent,
+            "own_sender" => $user->{'own-sender'},
+            "rank" => $user->rank,
+            "verified" => $user->verified,
+            "api_key" => $user->api_key,
+            "api_secret" => $user->api_secret
+        ];
+
+        foreach ($sessionVars as $key => $value) {
+            $_SESSION[$key] = $value;
         }
     }
+
+    public function validateCallback($url) {
+        if (empty($url)) return false;
+        
+        $allowed_domains = ['smsly.ch', 'sanona.org'];
+        $parsed = parse_url($url);
+        return in_array($parsed['host'] ?? '', $allowed_domains);
+    }
+}
+
+// Login-Verarbeitung
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die('CSRF Token ungültig');
+    }
+
+    $loginManager = new LoginManager();
+    
+    if (isset($_POST["email"], $_POST["password"]) && 
+        !empty($_POST["email"]) && 
+        !empty($_POST["password"])) {
+        
+        if (!$loginManager->validateInput($_POST["email"], $_POST["password"])) {
+            header("Location: sign-in.php");
+            exit;
+        }
+
+        $data = $loginManager->processLogin($_POST["email"], $_POST["password"]);
+
+        if ($data === null || empty($data)) {
+            $loginManager->handleLoginError("00.199.02", "Ungültige Antwort vom Server");
+        } else {
+            if (!isset($data[0])) {
+                $loginManager->handleLoginError("00.199.03", "Benutzer nicht gefunden");
+                header("Location: sign-in.php");
+                exit;
+            }
+            
+            $user = $data[0];
+            
+            if (password_verify($_POST["password"], $user->password)) {
+                switch ($user->{'can-login'}) {
+                    case "Allowed":
+                        $loginManager->setSessionVariables($user);
+                        
+                        // Sichere Callback-Verarbeitung
+                        if (isset($_GET['callback']) && $loginManager->validateCallback($_GET['callback'])) {
+                            header("Location: " . $_GET['callback']);
+                        } else {
+                            header("Location: ./");
+                        }
+                        exit;
+                        
+                    case "Disallowed":
+                        $loginManager->handleLoginError("00.200.01");
+                        break;
+                        
+                    case "Fraud":
+                        $loginManager->handleLoginError("00.200.02", $user->reason);
+                        break;
+                        
+                    case "Review":
+                        $loginManager->handleLoginError("00.200.03", $user->reason);
+                        break;
+                }
+            } else {
+                $loginManager->handleLoginError("00.199.01");
+            }
+        }
+    }
+    header("Location: sign-in.php");
+    exit;
 }
 ?>
 
@@ -182,26 +245,27 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && !empty($_POST["email"
 
                 ?>
 
-                <form action="" method="post">
+                <form action="" method="post" id="loginForm">
+                  <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                   <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email</label>
-
-                    <input type="email" name="email" class="form-control" id="exampleInputEmail1"
-                      aria-describedby="emailHelp">
+                    <label for="email" class="form-label">E-Mail</label>
+                    <input type="email" name="email" class="form-control" id="email" 
+                           required autocomplete="email">
                   </div>
                   <div class="mb-4">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+                    <label for="password" class="form-label">Passwort</label>
+                    <input type="password" name="password" class="form-control" id="password" 
+                           required autocomplete="current-password">
                   </div>
                   <div class="d-flex align-items-center justify-content-between mb-4">
                     <div class="form-check">
                     </div>
                     <!-- <a class="text-primary fw-medium" href="./main/authentication-forgot-password.html">Forgot Password ?</a> -->
                   </div>
-                  <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Sign In</button>
+                  <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Anmelden</button>
                   <div class="d-flex align-items-center justify-content-center">
-                    <p class="fs-4 mb-0 fw-medium">New to SMSly.ch?</p>
-                    <a class="text-primary fw-medium ms-2" href="./sign-up">Create an account</a>
+                    <p class="fs-4 mb-0 fw-medium">Neu bei SMSly.ch?</p>
+                    <a class="text-primary fw-medium ms-2" href="./sign-up">Account erstellen</a>
                   </div>
                 </form>
               </div>
@@ -222,6 +286,26 @@ if (isset($_POST["email"]) && isset($_POST["password"]) && !empty($_POST["email"
 
   <script src="./assets/js/sidebarmenu.js"></script>
   <script src="./assets/js/theme.js"></script>
+
+  <!-- Client-seitige Validierung -->
+  <script>
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      
+      if (!email || !password) {
+          e.preventDefault();
+          alert('Bitte füllen Sie alle Felder aus.');
+          return;
+      }
+      
+      if (password.length < 8) {
+          e.preventDefault();
+          alert('Das Passwort muss mindestens 8 Zeichen lang sein.');
+          return;
+      }
+  });
+  </script>
 
 </body>
 

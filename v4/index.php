@@ -52,11 +52,11 @@
                         </div>
                         <h5 class="fw-semibold mb-0 fs-5">Welcome back
                           <?php // Prüfen Sie, ob 'first_name' und 'last_name' gesetzt sind und nicht leer sind
-                            if (!empty($GLOBAL_VARIABLE_USER_NAME) && !empty($GLOBAL_VARIABLE_USER_SURNAME)) {
-                              echo $GLOBAL_VARIABLE_USER_NAME . " " . $GLOBAL_VARIABLE_USER_SURNAME;
+                            if (!empty($GLOBALS["USER_NAME"]) && !empty($GLOBALS["USER_SURNAME"])) {
+                              echo $GLOBALS["USER_NAME"] . " " . $GLOBALS["USER_SURNAME"];
                             } else {
                               // Wenn sie leer sind, geben Sie nur die E-Mail aus
-                              echo $GLOBAL_VARIABLE_USER_EMAIL;
+                              echo $$GLOBALS["USER_EMAIL"];
                             }
                           ?>!
                         </h5>
