@@ -116,77 +116,13 @@
                           <label for="tb-fname">SMS Recipient</label>
                         </div>
                       </div>
-                      <?php 
-                      if ($GLOBAL_VARIABLE_own_sender == "Yes"){
-                        echo '<div class="col-md-6">
+                      <div class="col-md-6">
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control" name="smsfrom" id="smsfrom" placeholder="name@example.com" />
+                          <input type="text" class="form-control" name="smsfrom" id="smsfrom"
+                            placeholder="name@example.com" />
                           <label for="smsfrom">SMS Sender</label>
                         </div>
-                      </div>';
-                      } elseif ($GLOBAL_VARIABLE_own_sender == "No"){
-                        echo '<div class="col-md-6">
-                        <div class="form-floating mb-3">
-                          <select class="form-control" name="smsfrom" id="smsfrom">';
-
-                          $curl = curl_init();
-                          
-                          curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-sender-name?whereRelation[user][email]=florin.schildknecht%40sanona.org&timestamps',
-                            CURLOPT_RETURNTRANSFER => true,
-                            CURLOPT_ENCODING => '',
-                            CURLOPT_MAXREDIRS => 10,
-                            CURLOPT_TIMEOUT => 0,
-                            CURLOPT_FOLLOWLOCATION => true,
-                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                            CURLOPT_CUSTOMREQUEST => 'GET',
-                            CURLOPT_HTTPHEADER => array(
-                              'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
-                            ),
-                          ));
-                          
-                          $response = curl_exec($curl);
-                          curl_close($curl);
-                          
-                          // Umwandeln des JSON-Strings in ein PHP-Array
-                          $data = json_decode($response, true);
-                          
-                          if (!empty($data)) {
-                              // Durchlaufen jedes Elements in $data
-                              foreach ($data as $item) {
-                                  // Speichern der Werte in separaten Variablen
-                                  $id = $item['id'];
-                                  $locale = $item['locale'];
-                                  $createdAt = $item['created_at'];
-                                  $updatedAt = $item['updated_at'];
-                                  $publishedAt = $item['published_at'];
-                                  $userId = $item['user']['id'];
-
-                                  $SenderName = $item['sender-name'];
-                                  $ValidationStatus = $item['validation-status'];
-                                  // ... Fügen Sie hier weitere Variablen hinzu, die Sie benötigen
-                          
-                                  // Anzeigen der Daten
-                                  if ($ValidationStatus == "Approved") {
-                                    echo "<option value='$SenderName'>$SenderName</option>";
-                                  }
-                                  
-                              }
-                          } else {
-                            echo "<option value=''>No Sender</option>";
-                          }
-                          
-
-
-                            
- 
-                          echo'</select>
-                          <label for="smsfrom">SMS Sender</label>
-                        </div>
-                      </div>';
-                      } ?>
-                      
-                      
+                      </div>
                       <div class="col-md-12">
                         <div class="form-floating">
                           <div class="form-group">
