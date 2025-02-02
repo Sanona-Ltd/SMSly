@@ -89,7 +89,7 @@
                   <div class="d-flex align-items-center">
                     <span class="flex-shrink-0"><i class="ti ti-building-bank text-primary display-6"></i></span>
                     <div class="ms-4">
-                      <h4 class="card-title text-dark"><?= $GLOBALS_USER_SMSCONTINGENT ?></h4>
+                      <h4 class="card-title text-dark"><?= $GLOBALS_USER_SMSCONTINGENT ?> / SMS</h4>
                       <span class="fs-2 mt-1 ">current balance</span>
                     </div>
                   </div>
