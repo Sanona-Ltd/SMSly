@@ -31,7 +31,7 @@
                     <a class="nav-link"></a>
                 </li>
                 <li class="nav-item dropdown-hover d-none d-lg-block">
-                    <a class="nav-link"><?php echo $GLOBAL_VARIABLE_sms_contingent; ?> credits left</a>
+                    <a class="nav-link"><?= $GLOBALS_USER_SMSCONTINGENT ?> credits left</a>
                 </li>
             </ul>
 
