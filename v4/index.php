@@ -52,10 +52,10 @@
                         </div>
                         <h5 class="fw-semibold mb-0 fs-5">Welcome back
                           <?php
-                            if (!empty($GLOBALS_USER_NAME) && !empty($GLOBALS_USER_SURNAME)) {
-                              echo $GLOBALS_USER_NAME . " " . $GLOBALS_USER_SURNAME;
+                            if (!empty($_SESSION["name"]) && !empty($_SESSION["surname"])) {
+                              echo $_SESSION["name"] . " " . $_SESSION["surname"];
                             } else {
-                              echo $GLOBALS_USER_EMAIL;
+                              echo $_SESSION["email"];
                             }
                           ?>!
                         </h5>
