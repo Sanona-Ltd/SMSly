@@ -24,15 +24,15 @@
                 <li class="nav-item dropdown-hover d-none d-lg-block">
                     <a class="nav-link SP_OpenChangeLogSideBar_Cls">Chanchlog</a>
                 </li> -->
-                <li class="nav-item dropdown-hover d-none d-lg-block">
+                <!-- <li class="nav-item dropdown-hover d-none d-lg-block">
                     <a class="nav-link" href="https://sanona.org">Powered by Sanona Ltd.</a>
                 </li>
                 <li class="nav-item dropdown-hover d-none d-lg-block">
                     <a class="nav-link"></a>
                 </li>
                 <li class="nav-item dropdown-hover d-none d-lg-block">
-                    <a class="nav-link"><?= $GLOBALS_USER_SMSCONTINGENT ?> credits left</a>
-                </li>
+                    <a class="nav-link"><?php /* $GLOBALS_USER_SMSCONTINGENT */ ?> credits left</a>
+                </li> -->
             </ul>
 
             <div class="d-block d-lg-none">
