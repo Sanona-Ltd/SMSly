@@ -1,7 +1,4 @@
 <?php session_start(); ?>
-<!-- Zu Löschen bei Releas von V4 -->
-<?php include("../v4/auth-app/is-login.php"); ?>
-<!-- Zu Löschen bei Releas von V4 -->
 
 
 <?php $filePath = "../version.txt"; ?>
