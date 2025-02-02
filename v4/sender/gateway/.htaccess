@@ -1,0 +1,12 @@
+# Verbiete allen direkten Zugriff
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Wenn die angeforderte Ressource existiert
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    # Dann einen 404 Fehler ausgeben
+    RewriteRule ^ - [R=404,L]
+</IfModule>
+
+# Verhindere das Auflisten von Verzeichnissen
+Options -Indexes
