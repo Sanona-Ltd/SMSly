@@ -18,12 +18,12 @@
             </ul>
 
             <ul class="navbar-nav quick-links d-none d-lg-flex">
-                <li class="nav-item dropdown-hover d-none d-lg-block">
+                <!-- <li class="nav-item dropdown-hover d-none d-lg-block">
                     <a class='nav-link' onclick="sp_sidebar_help1('contact');">Contact</a>
                 </li>
                 <li class="nav-item dropdown-hover d-none d-lg-block">
                     <a class="nav-link SP_OpenChangeLogSideBar_Cls">Chanchlog</a>
-                </li>
+                </li> -->
                 <li class="nav-item dropdown-hover d-none d-lg-block">
                     <a class="nav-link" href="https://sanona.org">Powered by Sanona Ltd.</a>
                 </li>
