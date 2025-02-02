@@ -50,13 +50,16 @@
                         <div class="rounded-circle overflow-hidden me-6">
                           <img src="./assets/images/icon.png" alt="" width="40" height="40">
                         </div>
-                        <h5 class="fw-semibold mb-0 fs-5">Welcome back <?php // Prüfen Sie, ob 'first_name' und 'last_name' gesetzt sind und nicht leer sind
-                                                                        if (!empty($GLOBAL_VARIABLE_name) && !empty($GLOBAL_VARIABLE_surname)) {
-                                                                          echo $GLOBAL_VARIABLE_name . " " . $GLOBAL_VARIABLE_surname;
-                                                                        } else {
-                                                                          // Wenn sie leer sind, geben Sie nur die E-Mail aus
-                                                                          echo $GLOBAL_VARIABLE_email;
-                                                                        } ?>!</h5>
+                        <h5 class="fw-semibold mb-0 fs-5">Welcome back
+                          <?php // Prüfen Sie, ob 'first_name' und 'last_name' gesetzt sind und nicht leer sind
+                            if (!empty($GLOBAL_VARIABLE_USER_NAME) && !empty($GLOBAL_VARIABLE_USER_SURNAME)) {
+                              echo $GLOBAL_VARIABLE_USER_NAME . " " . $GLOBAL_VARIABLE_USER_SURNAME;
+                            } else {
+                              // Wenn sie leer sind, geben Sie nur die E-Mail aus
+                              echo $GLOBAL_VARIABLE_USER_EMAIL;
+                            }
+                          ?>!
+                        </h5>
                       </div>
                       <div class="d-flex align-items-center">
                         <!-- <div class="border-end pe-4 border-muted border-opacity-10">
@@ -240,7 +243,8 @@
 
                     <div class="d-flex align-items-center justify-content-between mb-4">
                       <div class="d-flex">
-                        <div class="p-8 bg-success-subtle rounded-2 d-flex align-items-center justify-content-center me-6">
+                        <div
+                          class="p-8 bg-success-subtle rounded-2 d-flex align-items-center justify-content-center me-6">
                           <img src="./app/plus.svg" alt="" class="img-fluid" width="24" height="24">
                         </div>
                         <div>
@@ -253,7 +257,8 @@
 
                     <div class="d-flex align-items-center justify-content-between mb-4">
                       <div class="d-flex">
-                        <div class="p-8 bg-danger-subtle rounded-2 d-flex align-items-center justify-content-center me-6">
+                        <div
+                          class="p-8 bg-danger-subtle rounded-2 d-flex align-items-center justify-content-center me-6">
                           <img src="./app/minus.svg" alt="" class="img-fluid" width="24" height="24">
                         </div>
                         <div>
@@ -282,7 +287,8 @@
                 <a href="./sms-send" class="stretched-link"></a>
                 <div class="card-body">
                   <div class="d-flex align-items-center">
-                    <span class="flex-shrink-0"><i class="ti ti-device-mobile-message text-primary display-6"></i></span>
+                    <span class="flex-shrink-0"><i
+                        class="ti ti-device-mobile-message text-primary display-6"></i></span>
                     <div class="ms-4">
                       <h4 class="card-title text-dark">Send SMS</h4>
                       <span class="fs-2 mt-1 ">Send SMS via the web</span>
