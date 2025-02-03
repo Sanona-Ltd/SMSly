@@ -185,7 +185,7 @@
                               <span class="text-dark">' . $description . '</span>
                             </li>
                           </ul>
-                          <form action="app/add-credits-payment.php" method="get">
+                          <form action="app/payments/ad-a-payment.php" method="get">
                             <input type="text" name="product" value="' . $productId . '" hidden>
                             <input type="submit" class="btn btn-primary fw-bolder rounded-2 py-6 w-100 text-capitalize" value="choose ' . $name . '">
                           </form>

@@ -2,28 +2,42 @@
 
 function sendLogAsync($type, $user, $action, $storage)
 {
-    // API-URL und Token
-    $apiUrl = 'https://cdn.sanona.org/api/b872c5a521a44cc0983443494237e81e/logs';
-    $bearerToken = 'hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB';
+    $curl = curl_init();
 
-    // Daten vorbereiten
-    $postData = http_build_query([
-        'type' => $type,
-        'user' => $user,
-        'action' => $action,
-        'storage' => $storage
-    ]);
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/logs',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array(
+            'type' => $type,
+            'user' => $user,
+            'action' => $action,
+            'storage' => $storage
+        ),
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+        ),
+    ));
 
-    // Asynchroner Request
-    $cmd = "curl -X POST -H 'Content-Type: application/x-www-form-urlencoded' "
-        . "-H 'Authorization: Bearer $bearerToken' "
-        . "-d \"$postData\" '$apiUrl' > /dev/null 2>&1 &";
+    $response = curl_exec($curl);
+    $error = curl_error($curl);
+    curl_close($curl);
 
-    // Shell-Befehl ausführen
-    exec($cmd);
+    // Optional: Fehlerbehandlung
+    if ($error) {
+        error_log("Log API Error: " . $error);
+    }
+
+    return $response;
 }
 
 // Beispielnutzung
-// sendLogAsync('user.login.success', '20', 'signin.default', 'The user has successfully logged in');
+sendLogAsync('sms.sending', '0', 'signin.default', 'The user has successfully logged in');
 
 ?>
