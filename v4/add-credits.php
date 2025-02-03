@@ -293,7 +293,7 @@
     <script src="./assets/js/theme.js"></script>
     <?php
     // Überprüfen, ob die Session-Variablen nicht gesetzt sind oder leer sind
-    if (
+    /* if (
       !isset($GLOBAL_VARIABLE_email) || empty($GLOBAL_VARIABLE_email) ||
       !isset($GLOBAL_VARIABLE_name) || empty($GLOBAL_VARIABLE_name) ||
       !isset($GLOBAL_VARIABLE_surname) || empty($GLOBAL_VARIABLE_surname) ||
@@ -311,7 +311,7 @@
             modalElement.show();
           });
           </script>";
-    }
+    } */
     ?>
 </body>
 
