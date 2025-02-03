@@ -118,8 +118,42 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-floating mb-3">
-                          <input type="text" class="form-control" name="smsfrom" id="smsfrom"
-                            placeholder="name@example.com" />
+                          <?php
+                          // API-Aufruf für Absendernamen
+                          $curl = curl_init();
+                          curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-sender-name?whereRelation[user][email]=' . urlencode($_SESSION['email']) . '&timestamps=null',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_HTTPHEADER => array(
+                              'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+                            ),
+                          ));
+                          
+                          $response = curl_exec($curl);
+                          curl_close($curl);
+                          $senderNames = json_decode($response, true);
+                          
+                          if ($GLOBALS_USER_OWNSENDER === 'Yes') {
+                            // Freie Eingabe erlauben
+                            echo '<input type="text" class="form-control" name="smsfrom" id="smsfrom" placeholder="name@example.com" />';
+                          } else {
+                            // Dropdown mit genehmigten Namen anzeigen
+                            echo '<select class="form-control" name="smsfrom" id="smsfrom">';
+                            foreach ($senderNames as $sender) {
+                              if ($sender['validation-status'] === 'Approved') {
+                                echo '<option value="' . htmlspecialchars($sender['sender-name']) . '">' . 
+                                     htmlspecialchars($sender['sender-name']) . '</option>';
+                              }
+                            }
+                            echo '</select>';
+                          }
+                          ?>
                           <label for="smsfrom">SMS Sender</label>
                         </div>
                       </div>
