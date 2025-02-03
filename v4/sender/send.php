@@ -30,6 +30,46 @@ if ($needsYellowlistCheck) {
     // TODO: Spezielle Behandlung für Yellowlist
 }
 
+// Validierung des Absendernamens
+$isValidSender = false;
+if ($GLOBALS_USER_OWNSENDER === 'Yes') {
+    $isValidSender = true;
+} else {
+    // API-Aufruf für Absendernamen
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-sender-name?whereRelation[user][email]=' . urlencode($_SESSION['email']) . '&timestamps=null',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'GET',
+        CURLOPT_HTTPHEADER => array(
+            'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+        ),
+    ));
+    
+    $response = curl_exec($curl);
+    curl_close($curl);
+    $senderNames = json_decode($response, true);
+    
+    foreach ($senderNames as $sender) {
+        if ($sender['validation-status'] === 'Approved' && 
+            $sender['sender-name'] === $_GET['smsfrom']) {
+            $isValidSender = true;
+            break;
+        }
+    }
+}
+
+if (!$isValidSender) {
+    $_SESSION['sms-status'] = 'INVALID_SENDER';
+    header('Location: ../sms-send.php');
+    exit();
+}
+
 // SMS-Parameter vorbereiten
 $smsData = [
     'to' => $_GET['smsto'],
