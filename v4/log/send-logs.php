@@ -38,6 +38,6 @@ function sendLogAsync($type, $user, $action, $storage)
 }
 
 // Beispielnutzung
-sendLogAsync('sms.sending', '0', 'signin.default', 'The user has successfully logged in');
+// sendLogAsync('sms.sending', '0', 'signin.default', 'The user has successfully logged in');
 
 ?>
