@@ -66,6 +66,7 @@ if ($GLOBALS_USER_OWNSENDER === 'Yes') {
 
 if (!$isValidSender) {
     $_SESSION['sms-status'] = 'INVALID_SENDER';
+    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.error', 'Invalid sender name (' . $_GET['smsfrom'] . ')');
     header('Location: ../sms-send.php');
     exit();
 }
@@ -92,12 +93,17 @@ try {
     
     if (isset($responseData['messages'][0]['status']) && $responseData['messages'][0]['status'] == '0') {
         $_SESSION['sms-status'] = '0'; // Erfolg
+        sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.success', 'The user has successfully sent a SMS');
     } else {
         $_SESSION['sms-status'] = $responseData['messages'][0]['status'] ?? 'UNKNOWN_ERROR';
+        sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.error', 'Unknown error. Provider: ' . $provider);
     }
 } catch (Exception $e) {
     $_SESSION['sms-status'] = 'SENDING_ERROR';
+    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.error', 'Unknown error. Provider: ' . $provider);
 }
+
+
 
 header('Location: ../sms-send.php');
 exit();
