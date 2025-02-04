@@ -99,6 +99,10 @@ class LoginManager {
         
         $allowed_domains = ['smsly.ch', 'sanona.org'];
         $parsed = parse_url($url);
+        
+        // Prüfe ob es sich um einen relativen Pfad handelt
+        if (!isset($parsed['host'])) return true;
+        
         return in_array($parsed['host'] ?? '', $allowed_domains);
     }
 }
@@ -138,9 +142,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     case "Allowed":
                         $loginManager->setSessionVariables($user);
                         
-                        // Sichere Callback-Verarbeitung
+                        // Callback-Verarbeitung für beide Parameter (callback und cb)
                         if (isset($_GET['callback']) && $loginManager->validateCallback($_GET['callback'])) {
                             header("Location: " . $_GET['callback']);
+                        } elseif (isset($_GET['cb']) && $loginManager->validateCallback($_GET['cb'])) {
+                            header("Location: " . $_GET['cb']);
                         } else {
                             header("Location: ./");
                         }
