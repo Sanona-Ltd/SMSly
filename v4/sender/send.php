@@ -1,9 +1,17 @@
 <?php 
 require_once("../auth/login-checker.php");
+require_once('../log/send-logs.php');
 
 // Überprüfe ob alle erforderlichen Felder ausgefüllt sind
 if (!isset($_GET['smsto']) || !isset($_GET['smsfrom']) || !isset($_GET['smstext'])) {
     $_SESSION['sms-status'] = 'MISSING_PARAMETERS';
+    header('Location: ../sms-send.php');
+    exit();
+}
+
+// Überprüfen ob die Session-ID existiert
+if (!isset($_SESSION['id']) || empty($_SESSION['id'])) {
+    $_SESSION['sms-status'] = 'SESSION_ERROR';
     header('Location: ../sms-send.php');
     exit();
 }
@@ -76,8 +84,8 @@ $smsData = [
     'to' => $_GET['smsto'],
     'from' => $_GET['smsfrom'],
     'text' => $_GET['smstext'],
-    'sender_id' => $_GET['sender_id'],
-    'sender_ip' => $_GET['sender_ip'],
+    'sender_id' => $_SESSION['id'],
+    'sender_ip' => $visitor_ip,
     'system' => $_GET['smssystem'],
     'callback_url' => $_GET['cburl']
 ];
@@ -102,8 +110,6 @@ try {
     $_SESSION['sms-status'] = 'SENDING_ERROR';
     sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.error', 'Unknown error. Provider: ' . $provider);
 }
-
-
 
 header('Location: ../sms-send.php');
 exit();
