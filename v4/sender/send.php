@@ -10,7 +10,7 @@ if (!isset($_GET['smsto']) || !isset($_GET['smsfrom']) || !isset($_GET['smstext'
 }
 
 // Überprüfen ob die Session-ID existiert
-if (!isset($_SESSION['id']) || empty($_SESSION['id'])) {
+if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
     $_SESSION['sms-status'] = 'SESSION_ERROR';
     header('Location: ../sms-send.php');
     exit();
