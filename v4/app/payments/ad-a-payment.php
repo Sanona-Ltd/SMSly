@@ -44,7 +44,7 @@ $product_price = $product_price * 100;
 $curl = curl_init();
 
 curl_setopt_array($curl, array(
-  CURLOPT_URL => 'https://api.titanpay.ch?amount=' . $product_price . '&callback=https%3A%2F%2Fsmsly.ch%2Fv4%2Fpayment-history&message=Auf%20dem%20Kontoauszug%20ist%20%3Cb%3ESanona%20Ltd.%3C%2Fb%3E%20angegeben%2C%20bei%20der%20es%20sich%20um%20unsere%20Muttergesellschaft%20handelt.',
+  CURLOPT_URL => 'https://api.titanpay.ch?amount=' . $product_price . '&callback=https%3A%2F%2Fsmsly.ch%2Fv4%2Fpayment-history&message=Auf%20dem%20Kontoauszug%20ist%20%3Cb%3ESanona%20Ltd.%3C%2Fb%3E%20angegeben%2C%20bei%20der%20es%20sich%20um%20unsere%20Muttergesellschaft%20handelt.&cancel=https%3A%2F%2Fsmsly.ch%2Fv4%2Fadd-credits',
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_ENCODING => '',
   CURLOPT_MAXREDIRS => 10,
