@@ -1,7 +1,7 @@
 <?php
 
 $product_name = $_GET['product'];
-require_once '../../../auth/login-checker.php';
+require_once '../../auth/login-checker.php';
 
 
 $curl = curl_init();
