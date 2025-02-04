@@ -1,6 +1,24 @@
 <?php
 session_start();
 
+// Ermittlung der Besucher-IP
+$visitor_ip = '';
+if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+    $visitor_ip = $_SERVER['HTTP_CLIENT_IP'];
+} elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+    $visitor_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+} else {
+    $visitor_ip = $_SERVER['REMOTE_ADDR'];
+}
+
+// Bereinigung der IP-Adresse
+$visitor_ip = filter_var($visitor_ip, FILTER_VALIDATE_IP);
+
+// Falls keine gültige IP gefunden wurde, setze einen Standardwert
+if (!$visitor_ip) {
+    $visitor_ip = "0.0.0.0";
+}
+
 // Prüfen ob Benutzer angemeldet ist
 if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) {
     // Benutzer ist angemeldet - Globale Variablen setzen

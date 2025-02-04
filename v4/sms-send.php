@@ -72,7 +72,7 @@
                     <span class="flex-shrink-0"><i class="ti ti-building-bank text-primary display-6"></i></span>
                     <div class="ms-4">
                       <h4 class="card-title text-dark">
-                        <?php echo $GLOBAL_VARIABLE_sms_contingent; ?>
+                        <?php echo $GLOBALS_USER_SMSCONTINGENT; ?>
                       </h4>
                       <span class="fs-2 mt-1 ">Current balance</span>
                     </div>
