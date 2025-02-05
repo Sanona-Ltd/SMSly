@@ -72,7 +72,7 @@ curl_setopt_array($curl, array(
   CURLOPT_FOLLOWLOCATION => true,
   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
   CURLOPT_CUSTOMREQUEST => 'POST',
-  CURLOPT_POSTFIELDS => 'carrier_status=' . $status . '&sms_message_price=' . $price,
+  CURLOPT_POSTFIELDS => 'carrier_status=' . $status . '&sms_message_price=' . $price . '&sms_network=' . $networkCode,
   CURLOPT_HTTPHEADER => array(
     'Content-Type: application/x-www-form-urlencoded',
     'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
