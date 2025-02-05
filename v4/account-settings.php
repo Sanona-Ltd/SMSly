@@ -1,10 +1,4 @@
-<?php session_start(); ?>
-
-
-<?php $filePath = "../version.txt"; ?>
-<?php $SystemVersion = file_get_contents($filePath); ?>
-<?php // include("../$SystemVersion/auth-app/is-login.php"); ?>
-
+<?php require_once("auth/login-checker.php"); ?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme">
@@ -71,7 +65,8 @@
 
           <div class="card-body">
             <div class="tab-content" id="pills-tabContent">
-              <div class="tab-pane fade show active" id="pills-account" role="tabpanel" aria-labelledby="pills-account-tab" tabindex="0">
+              <div class="tab-pane fade show active" id="pills-account" role="tabpanel"
+                aria-labelledby="pills-account-tab" tabindex="0">
                 <div class="row">
 
                   <div class="col-12">
@@ -84,37 +79,43 @@
                             <div class="col-lg-6">
                               <div class="mb-4">
                                 <label for="exampleInputtext" class="form-label fw-semibold">Name</label>
-                                <input type="text" name="first_name" class="form-control" id="first_name" placeholder="Max" value="<?= $GLOBAL_VARIABLE_name ?>">
+                                <input type="text" name="first_name" class="form-control" id="first_name"
+                                  placeholder="Max" value="<?= $GLOBALS_USER_NAME ?>">
                               </div>
                             </div>
                             <div class="col-lg-6">
                               <div class="mb-4">
                                 <label for="exampleInputtext2" class="form-label fw-semibold">Surname</label>
-                                <input type="text" name="last_name" class="form-control" id="last_name" placeholder="Mustermann" value="<?= $GLOBAL_VARIABLE_surname ?>">
+                                <input type="text" name="last_name" class="form-control" id="last_name"
+                                  placeholder="Mustermann" value="<?= $GLOBALS_USER_SURNAME ?>">
                               </div>
                             </div>
                             <div class="col-8">
                               <div class="mb-4">
                                 <label for="addressInput" class="form-label fw-semibold">Street</label>
-                                <input type="text" name="address_street" class="form-control" id="address_street" placeholder="Sample street " value="<?= $GLOBAL_VARIABLE_address_street ?>">
+                                <input type="text" name="address_street" class="form-control" id="address_street"
+                                  placeholder="Sample street " value="<?= $GLOBALS_USER_STREET ?>">
                               </div>
                             </div>
                             <div class="col-4">
                               <div class="mb-4">
                                 <label for="addressInput" class="form-label fw-semibold">Number</label>
-                                <input type="text" name="address_number" class="form-control" id="address_number" placeholder="99" value="<?= $GLOBAL_VARIABLE_address_number ?>">
+                                <input type="text" name="address_number" class="form-control" id="address_number"
+                                  placeholder="99" value="<?= $GLOBALS_USER_NUMBER ?>">
                               </div>
                             </div>
                             <div class="col-5">
                               <div class="mb-4">
                                 <label for="addressInput" class="form-label fw-semibold">Zip code</label>
-                                <input type="text" name="address_zip" class="form-control" id="address_zip" placeholder="1234" value="<?= $GLOBAL_VARIABLE_address_zip ?>">
+                                <input type="text" name="address_zip" class="form-control" id="address_zip"
+                                  placeholder="1234" value="<?= $GLOBALS_USER_ZIPCODE ?>">
                               </div>
                             </div>
                             <div class="col-7">
                               <div class="mb-4">
                                 <label for="addressInput" class="form-label fw-semibold">City</label>
-                                <input type="text" name="address_place" class="form-control" id="address_place" placeholder="Sample City" value="<?= $GLOBAL_VARIABLE_address_place ?>">
+                                <input type="text" name="address_place" class="form-control" id="address_place"
+                                  placeholder="Sample City" value="<?= $GLOBALS_USER_CITY ?>">
                               </div>
                             </div>
 
