@@ -140,7 +140,7 @@
         <!-- ---------------------------------- -->
         <!-- ADMIN -->
         <!-- ---------------------------------- -->
-        <?php if ($GLOBAL_VARIABLE_rank == "Admin") {
+        <?php if ($GLOBALS_USER_RANK == "Admin") {
           echo '
                 
         <li class="nav-small-cap">

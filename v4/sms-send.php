@@ -170,7 +170,7 @@
                       <input name="scode" type="text" value="wwSYyLN3Pe3K1hZtmehD1Y2xrubhXzCgwtH2cbSk" hidden>
                       <input name="smssystem" type="text" value="SMSly.ch | WEB | V3" hidden>
                       <input name="cburl" type="text" value="https://smsly.ch/v4/app/sms-callback" hidden>
-                      <input name="sender_id" type="text" value="<?php echo $_SESSION['id'] ?>" hidden>
+                      <input name="sender_id" type="text" value="<?php echo $GLOBALS_USER_ID ?>" hidden>
                       <input name="sender_ip" type="text" value="<?php echo $visitor_ip ?>" hidden>
                       <div class="col-12">
                         <div class="d-md-flex align-items-center mt-3">
