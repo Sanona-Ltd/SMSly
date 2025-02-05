@@ -73,7 +73,7 @@ if (!$isValidSender) {
 
 // ChatGPT API Integration für Fraud-Erkennung
 function checkFraudWithGPT($smsText, $smsFrom, $countryCode) {
-    $api_key = getenv('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'); // API-Key aus Umgebungsvariablen
+    $api_key = getenv('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'); // API-Key aus Umgebungsvariablen
     
     $prompt = <<<EOT
 Du agierst als Fraud-System. Dir werden per API drei Parameter übermittelt:
