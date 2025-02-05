@@ -50,7 +50,6 @@
               </span>
               <span class="hide-menu">Send SMS</span>
             </div>
-            <span class="hide-menu badge rounded-pill border border-dark text-dark fs-2 py-1 px-2">V3</span>
           </a>
         </li>
         <li class="sidebar-item">
@@ -63,7 +62,7 @@
             </div>
           </a>
         </li>
-        <?php if ($GLOBAL_VARIABLE_own_sender == "No") {
+        <?php if ($GLOBALS_USER_OWNSENDER == "No") {
           echo '<li class="sidebar-item">
           <a class="sidebar-link justify-content-between" href="./sms-sender" aria-expanded="false">
             <div class="d-flex align-items-center gap-3">
