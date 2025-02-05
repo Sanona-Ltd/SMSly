@@ -1,13 +1,4 @@
-<?php session_start(); ?>
-<!-- Zu Löschen bei Releas von V4 -->
-<?php include("../v4/auth-app/is-login.php"); ?>
-<!-- Zu Löschen bei Releas von V4 -->
-
-
-<?php $filePath = "../version.txt"; ?>
-<?php $SystemVersion = file_get_contents($filePath); ?>
-<?php // include("../$SystemVersion/auth-app/is-login.php"); 
-?>
+<?php require_once("auth/login-checker.php"); ?>
 
 
 <!DOCTYPE html>
@@ -114,141 +105,114 @@
                       return ltrim($number, "0");
                     }
 
+                    // Neue API-Abfrage
+                    $curl = curl_init();
+                    $email = urlencode($_SESSION['email']); // E-Mail aus der Session
 
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => "https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/payments?whereRelation[user][email]={$email}&timestamps=null",
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => '',
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 0,
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST => 'GET',
+                        CURLOPT_HTTPHEADER => array(
+                            'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+                        ),
+                    ));
 
+                    $response = curl_exec($curl);
+                    curl_close($curl);
 
-                    /* $sessionid = $_SESSION['id'];
+                    $payments = json_decode($response, true);
 
-                    $servername = "localhost";
-                    $username = "smsly_sms";
-                    $password = "4^Y9F5y3amjecvFms";
-                    $dbname = "smsly_sms";
+                    if (!empty($payments)) {
+                        foreach ($payments as $payment) {
+                            $id = $payment['id'];
+                            $hash = $payment['hash'];
+                            $link = $payment['link'];
+                            $payment_id = $payment['payment_id'];
+                            $product = $payment['product_name'];
+                            $contingent = $payment['contingent'];
+                            $payment_status = $payment['payment_status'];
 
-                    // Create connection
-                    $conn = new mysqli($servername, $username, $password, $dbname);
-                    // Check connection
-                    if ($conn->connect_error) {
-                      die("Connection failed: " . $conn->connect_error);
-                    }
+                            // Status-Badge basierend auf payment_status
+                            if ($payment_status == "open") {
+                                $payment_status_badge = "<span class='badge bg-warning-subtle rounded-3 py-2 text-warning fw-semibold fs-2 d-inline-flex align-items-center gap-1'>
+                                                        <div class='spinner-border text-warning spinner-border-sm' role='status'><span class='visually-hidden'>Loading...</span></div>pending
+                                                      </span>";
+                                $action_dropdown = "<div class='dropdown dropstart'>
+                                                    <a href='#' class='text-muted' id='dropdownMenuButton' data-bs-toggle='dropdown' aria-expanded='false'>
+                                                        <i class='ti ti-dots-vertical fs-6'></i>
+                                                    </a>
+                                                    <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                        <li>
+                                                            <a class='dropdown-item d-flex align-items-center gap-3' href='$link'><i class='fs-4 ti ti-receipt-2'></i>Pay Now</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class='dropdown-item d-flex align-items-center gap-3' href='app/cancel-payment?id=$hash'><i class='fs-4 ti ti-circle-x'></i>Cancel Payment</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>";
+                            } elseif ($payment_status == "cancelled") {
+                                $payment_status_badge = "<span class='badge bg-danger-subtle rounded-3 py-2 text-danger fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-x fs-4'></i>cancelled</span>";
+                                $action_dropdown = "<div class='dropdown dropstart'>
+                                                    <a href='#' class='text-muted' id='dropdownMenuButton' data-bs-toggle='dropdown' aria-expanded='false'>
+                                                        <i class='ti ti-dots-vertical fs-6'></i>
+                                                    </a>
+                                                    <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                        <li>
+                                                            <a class='dropdown-item d-flex align-items-center gap-3' href='/v3/invoice?id=$payment_id'><i class='fs-4 ti ti-info-circle'></i>Info</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>";
+                            } elseif ($payment_status == "paid") {
+                                $payment_status_badge = "<span class='badge bg-success-subtle rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-check fs-4'></i>paid</span>";
+                                $action_dropdown = "<div class='dropdown dropstart'>
+                                                    <a href='#' class='text-muted' id='dropdownMenuButton' data-bs-toggle='dropdown' aria-expanded='false'>
+                                                        <i class='ti ti-dots-vertical fs-6'></i>
+                                                    </a>
+                                                    <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
+                                                        <li>
+                                                            <a class='dropdown-item d-flex align-items-center gap-3' href='/v3/invoice?id=$payment_id'><i class='fs-4 ti ti-info-circle'></i>Info</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>";
+                            }
 
-                    $sql = "SELECT `id`, `user_id`, `hash`, `link`, `payment_id`, `product`, `contingent`, `payment_status`, `reg_date` FROM `payments` WHERE `user_id` = $sessionid ORDER BY id DESC;";
-                    $result = $conn->query($sql);
+                            $paddedNumber = padNumber($id);
 
-                    if ($result->num_rows > 0) {
-                      // output data of each row
-                      while ($row = $result->fetch_assoc()) {
-                        $id = $row["id"];
-                        $user_id = $row["user_id"];
-                        $hash = $row["hash"];
-                        $link = $row["link"];
-                        $payment_id = $row["payment_id"];
-                        $product = $row["product"];
-                        $contingent = $row["contingent"];
-                        $payment_status = $row["payment_status"];
-                        $reg_date = $row["reg_date"];
-
-                        if ($payment_status == "0") {
-                          $payment_status_badge = "<span class='badge bg-warning-subtle rounded-3 py-2 text-warning fw-semibold fs-2 d-inline-flex align-items-center gap-1'>
-                                                      <div class='spinner-border text-warning spinner-border-sm' role='status'><span class='visually-hidden'>Loading...</span></div>pending
-                                                    </span>";
-                          $action_dropdown = "<div class='dropdown dropstart'>
-                          <a href='#' class='text-muted' id='dropdownMenuButton' data-bs-toggle='dropdown' aria-expanded='false'>
-                            <i class='ti ti-dots-vertical fs-6'></i>
-                          </a>
-                          <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                            <li>
-                              <a class='dropdown-item d-flex align-items-center gap-3' href='$link'><i class='fs-4 ti ti-receipt-2'></i>Pay Now</a>
-                            </li>
-                            <li>
-                              <a class='dropdown-item d-flex align-items-center gap-3' href='app/cancel-payment?id=$hash'><i class='fs-4 ti ti-circle-x'></i>Cancel Payment</a>
-                            </li>
-                          </ul>
-                        </div>";
-                        } elseif ($payment_status == "4") {
-                          $payment_status_badge = "<span class='badge bg-danger-subtle rounded-3 py-2 text-danger fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-x fs-4'></i>cancelled</span>";
-                          $action_dropdown = "<div class='dropdown dropstart'>
-                          <a href='#' class='text-muted' id='dropdownMenuButton' data-bs-toggle='dropdown' aria-expanded='false'>
-                            <i class='ti ti-dots-vertical fs-6'></i>
-                          </a>
-                          <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                            <li>
-                              <a class='dropdown-item d-flex align-items-center gap-3' href='/v3/invoice?id=$payment_id'><i class='fs-4 ti ti-info-circle'></i>Info</a>
-                            </li>
-                          </ul>
-                        </div>";
-                        } elseif ($payment_status == "6") {
-                          $payment_status_badge = "<span class='badge bg-secondary-subtle rounded-3 py-2 text-secondary fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-arrow-back-up fs-4'></i>refunded</span>";
-                          $action_dropdown = "<div class='dropdown dropstart'>
-                          <a href='#' class='text-muted' id='dropdownMenuButton' data-bs-toggle='dropdown' aria-expanded='false'>
-                            <i class='ti ti-dots-vertical fs-6'></i>
-                          </a>
-                          <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                            <li>
-                              <a class='dropdown-item d-flex align-items-center gap-3' href='/v3/invoice?id=$payment_id'><i class='fs-4 ti ti-info-circle'></i>Info</a>
-                            </li>
-                          </ul>
-                        </div>";
-                        } elseif ($payment_status == "9") {
-                          $payment_status_badge = "<span class='badge bg-success-subtle rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-check fs-4'></i>paid</span>";
-                          $action_dropdown = "<div class='dropdown dropstart'>
-                          <a href='#' class='text-muted' id='dropdownMenuButton' data-bs-toggle='dropdown' aria-expanded='false'>
-                            <i class='ti ti-dots-vertical fs-6'></i>
-                          </a>
-                          <ul class='dropdown-menu' aria-labelledby='dropdownMenuButton'>
-                            <li>
-                              <a class='dropdown-item d-flex align-items-center gap-3' href='/v3/invoice?id=$payment_id'><i class='fs-4 ti ti-info-circle'></i>Info</a>
-                            </li>
-                          </ul>
-                        </div>";
+                            echo "<tr>
+                                    <td>
+                                        <h6 class='fw-semibold mb-0'>SLY-$paddedNumber</h6>
+                                    </td>
+                                    <td>
+                                        <div class='d-flex align-items-center'>
+                                            <h6 class='fs-4 fw-semibold mb-0'>$product</h6>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class='badge bg-light-subtle rounded-3 py-2 text-dark fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-text-plus fs-4'></i>add $contingent Credits</span>
+                                    </td>
+                                    <td>
+                                        $payment_status_badge
+                                    </td>
+                                    <td>
+                                        $action_dropdown
+                                    </td>
+                                </tr>";
                         }
-
-
-                        $paddedNumber = padNumber($id); // wird "000018"
-                        $unpaddedNumber = unpadNumber($id); // wird "18"
-
-
-
-                        echo "
-                          <tr>
-                            <td>
-                              <h6 class='fw-semibold mb-0'>SLY-$paddedNumber</h6>
-                            </td>
-                            <td>
-                              <div class='d-flex align-items-center'>
-                                <h6 class='fs-4 fw-semibold mb-0'>$product</h6>
-                              </div>
-                            </td>
-                            <td>
-                              <span class='badge bg-light-subtle rounded-3 py-2 text-dark fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-text-plus fs-4'></i>add $contingent Credits</span>
-                            </td>
-                            <td>
-                              $payment_status_badge
-                            </td>
-                            <td>
-                              $action_dropdown
-                            </td>
-                          </tr>";
-                      }
-                    } else { */
-                      echo "<tr>
-                      <td>
-                        
-                      </td>
-                      <td>
-                        
-                      </td>
-                      <td>
-                        No transaction found
-                      </td>
-                      <td>
-                        
-                      </td>
-                      <td>
-                        
-                      </td>
-                    </tr>";
-                    /* }
-                    $conn->close(); */
+                    } else {
+                        echo "<tr>
+                                <td></td>
+                                <td></td>
+                                <td>No transaction found</td>
+                                <td></td>
+                                <td></td>
+                              </tr>";
+                    }
                     ?>
 
 
