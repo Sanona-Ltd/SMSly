@@ -104,6 +104,47 @@ try {
     if (isset($responseData['messages'][0]['status']) && $responseData['messages'][0]['status'] == '0') {
         $_SESSION['sms-status'] = '0'; // Erfolg
         sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.success', 'The user has successfully sent a SMS');
+        
+        // SMS in Datenbank loggen
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => http_build_query([
+                'sms_from' => $_GET['smsfrom'],
+                'sms_to' => $_GET['smsto'],
+                'sms_message' => $_GET['smstext'],
+                'sms_status' => $responseData['messages'][0]['status'],
+                'carrier_status' => $responseData['messages'][0]['status'],
+                'sms_network' => $responseData['messages'][0]['network'] ?? '',
+                'sms_network_gateway' => $provider,
+                'sms_message_id' => $responseData['messages'][0]['message-id'] ?? '',
+                'sms_message_price' => $responseData['messages'][0]['message-price'] ?? '0',
+                'sms_tag' => $_GET['smstag'] ?? '',
+                'sender' => $_SESSION['user_id'],
+                'sender_cost' => $responseData['messages'][0]['message-price'] ?? '0',
+                'sender_ip' => $visitor_ip,
+                'sender_system' => 'Webform | SMSly',
+                'sender_gateway' => $provider
+            ]),
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/x-www-form-urlencoded',
+                'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+            ),
+        ));
+
+        $dbResponse = curl_exec($curl);
+        curl_close($curl);
+        
+        if ($dbResponse === false) {
+            sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'db.error', 'Failed to log SMS to database');
+        }
     } else {
         $_SESSION['sms-status'] = $responseData['messages'][0]['status'] ?? 'UNKNOWN_ERROR';
         sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.error', 'Unknown error. Provider: ' . $provider);
