@@ -211,12 +211,14 @@
 
   <script>
     $(document).ready(function() {
-      $('#SMSHistory').DataTable({
-        "order": [[0, "desc"]],
-        "language": {
-          "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/de-DE.json"
-        }
-      });
+      if (!$.fn.DataTable.isDataTable('#SMSHistory')) {
+        $('#SMSHistory').DataTable({
+          "order": [[0, "desc"]],
+          "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/de-DE.json"
+          }
+        });
+      }
     });
   </script>
 
