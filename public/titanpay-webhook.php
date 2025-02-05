@@ -1,6 +1,6 @@
 <?php
 
-include_once '../../log/send-logs.php';
+include_once 'v4/log/send-logs.php';
 
 // Webhook-Daten aus dem POST-Request als JSON empfangen und dekodieren
 $payload = file_get_contents('php://input');
