@@ -24,10 +24,20 @@ if (!preg_match('/^\+?[1-9]\d{1,14}$/', $phone)) {
     exit();
 }
 
-// Platzhalter für Yellowlist-Prüfung
+// Blacklist-Prüfung
+$isBlacklisted = false; // TODO: Implementiere Blacklist-Prüfung
+if ($isBlacklisted) {
+    $_SESSION['sms-status'] = 'BLACKLISTED';
+    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.blocked', 'Number is blacklisted');
+    header('Location: ../sms-send.php');
+    exit();
+}
+
+// Yellowlist-Prüfung
 $needsYellowlistCheck = false; // TODO: Implementiere Yellowlist-Prüfung
 if ($needsYellowlistCheck) {
     // TODO: Spezielle Behandlung für Yellowlist
+    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.warning', 'Number is on yellowlist');
 }
 
 // Validierung des Absendernamens
@@ -69,106 +79,6 @@ if (!$isValidSender) {
     sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.error', 'Invalid sender name (' . $_GET['smsfrom'] . ')');
     header('Location: ../sms-send.php');
     exit();
-}
-
-// ChatGPT API Integration für Fraud-Erkennung
-function checkFraudWithGPT($smsText, $smsFrom, $countryCode) {
-    $api_key = 'DdWiZ6k4ZhDTzJijbcIcTx3HbjbS7iaqyaDKPCxswXaCak8bHrfuK8wI32XfddO47FOFyJiFgGh6vaM1';
-    
-    $prompt = <<<EOT
-Du agierst als Fraud-System. Dir werden per API drei Parameter übermittelt:
-
-SMS-Text
-SMS-Absender
-Ländercode der Empfängernummer
-
-Dein Auftrag ist es, basierend auf diesen Daten einen Fraud-Score zu berechnen, der angibt, wie wahrscheinlich es ist, dass die SMS betrügerisch oder auf Scam ausgelegt ist. Der Score soll ein numerischer Wert zwischen 0 und 100 sein, wobei 0 für kein Betrugsrisiko und 100 für ein sehr hohes Betrugsrisiko steht.
-
-Beachte dabei folgende Analyse-Schritte:
-- Keyword-Analyse
-- Absender-Analyse
-- Regionale Analyse
-- Score-Berechnung
-- Detaillierte Begründung
-
-Eingabe:
-SMS-Absender: "$smsFrom"
-Empfänger-Ländercode: "$countryCode"
-SMS-Text: "$smsText"
-
-Antworte ausschließlich im JSON-Format.
-EOT;
-
-    $curl = curl_init();
-    curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://api.infomaniak.com/1/ai/product_id/openai/chat/completions',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_HTTPHEADER => [
-            'Authorization: Bearer ' . $api_key,
-            'Content-Type: application/json'
-        ],
-        CURLOPT_POSTFIELDS => json_encode([
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $prompt
-                ]
-            ],
-            'model' => 'llama-3.3'
-        ])
-    ]);
-
-    $response = curl_exec($curl);
-    $httpcode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    curl_close($curl);
-
-    if ($httpcode !== 200) {
-        throw new Exception('AI API error');
-    }
-
-    // Vollständige API-Antwort loggen
-    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'ai.raw_response', $response);
-
-    $result = json_decode($response, true);
-    $fraudAnalysis = json_decode($result['choices'][0]['message']['content'], true);
-    
-    return $fraudAnalysis;
-}
-
-// Fraud-Check durchführen
-try {
-    $countryCode = preg_replace('/^\+?/', '', $_GET['smsto']);
-    $countryCode = substr($countryCode, 0, strpos($countryCode, ' ') ?: strlen($countryCode));
-    
-    $fraudAnalysis = checkFraudWithGPT(
-        $_GET['smstext'],
-        $_GET['smsfrom'],
-        $countryCode
-    );
-    
-    // Log der KI-Antwort
-    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'ai.analysis', 
-        'AI Fraud Score: ' . $fraudAnalysis['fraud_score'] . 
-        ', Analysis: ' . $fraudAnalysis['analysis']['overall_assessment']
-    );
-    
-    // Debug: Logging der finalen Entscheidung
-    /* writeDebugLog([
-        'fraud_score' => $fraudAnalysis['fraud_score'],
-        'action' => $fraudAnalysis['fraud_score'] > 80 ? 'blocked' : 'allowed'
-    ], 'fraud_decision'); */
-    
-    if ($fraudAnalysis['fraud_score'] > 80) {
-        $_SESSION['sms-status'] = 'FRAUD_DETECTED';
-        sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.blocked', 'Fraud detection: ' . $fraudAnalysis['analysis']['overall_assessment']);
-        header('Location: ../sms-send.php');
-        exit();
-    }
-    
-} catch (Exception $e) {
-    // Bei API-Fehlern fortfahren, aber loggen
-    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'fraud.check.error', 'Error during fraud check: ' . $e->getMessage());
 }
 
 // SMS-Parameter vorbereiten
