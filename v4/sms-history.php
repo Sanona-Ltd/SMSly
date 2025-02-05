@@ -181,15 +181,6 @@
                           <!-- end row -->
                         </tfoot>
                       </table>
-                      <script>
-                        $(document).ready(function() {
-                          $('#SMSHistory').DataTable({
-                            "order": [
-                              [0, "desc"] // Sortiert die ID-Spalte (erste Spalte) absteigend
-                            ]
-                          });
-                        });
-                      </script>
                     </div>
                   </div>
                 </div>
@@ -215,12 +206,22 @@
   <script src="./assets/js/app.init.js"></script>
   <script src="./assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="./assets/libs/simplebar/dist/simplebar.min.js"></script>
+  <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="./assets/js/datatable/datatable-api.init.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      $('#SMSHistory').DataTable({
+        "order": [[0, "desc"]],
+        "language": {
+          "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/de-DE.json"
+        }
+      });
+    });
+  </script>
 
   <script src="./assets/js/sidebarmenu.js"></script>
   <script src="./assets/js/theme.js"></script>
-
-  <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
-  <script src="./assets/js/datatable/datatable-api.init.js"></script>
 </body>
 
 </html>
