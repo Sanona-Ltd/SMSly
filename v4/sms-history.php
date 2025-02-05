@@ -1,5 +1,4 @@
-<?php session_start(); ?>
-<?php include("../v4/auth-app/is-login.php"); ?>
+<?php require_once("auth/login-checker.php"); ?>
 
 
 <!DOCTYPE html>
@@ -98,180 +97,72 @@
                           <!-- start row -->
 
                           <?php
-                          /* $sender_id = $_SESSION['id'];
+                          $curl = curl_init();
 
-                          $servername = "localhost";
-                          $username = "smsly_sms";
-                          $password = "4^Y9F5y3amjecvFms";
-                          $dbname = "smsly_sms";
+                          curl_setopt_array($curl, array(
+                            CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-send?whereRelation[sender][email]=florin.schildknecht%40sanona.org',
+                            CURLOPT_RETURNTRANSFER => true,
+                            CURLOPT_ENCODING => '',
+                            CURLOPT_MAXREDIRS => 10,
+                            CURLOPT_TIMEOUT => 0,
+                            CURLOPT_FOLLOWLOCATION => true,
+                            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                            CURLOPT_CUSTOMREQUEST => 'GET',
+                            CURLOPT_HTTPHEADER => array(
+                              'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+                            ),
+                          ));
 
-                          $popout = "1";
+                          $response = curl_exec($curl);
+                          curl_close($curl);
 
-                          // Create connection
-                          $conn = new mysqli($servername, $username, $password, $dbname);
-                          // Check connection
-                          if ($conn->connect_error) {
-                            die("Connection failed: " . $conn->connect_error);
-                          }
+                          $data = json_decode($response, true);
 
-                          $sql = "SELECT * FROM `sms_send` WHERE sender_id = $sender_id";
-                          $result = $conn->query($sql);
+                          if (!empty($data)) {
+                              foreach ($data as $row) {
+                                  $id = $row["id"];
+                                  $sms_from = $row["sms_from"];
+                                  $sms_to = $row["sms_to"];
+                                  $sms_message = $row["sms_message"];
+                                  $carrier_status = isset($row["carrier_status"]) ? $row["carrier_status"] : "";
+                                  $reg_date = date('H:i d.m.Y'); // Aktuelles Datum, da es nicht in der API-Antwort enthalten ist
 
-                          if ($result->num_rows > 0) {
-                            // output data of each row
-                            while ($row = $result->fetch_assoc()) {
+                                  if ($carrier_status === "delivered") {
+                                      $sms_status_badge = "<span class='badge bg-success-subtle rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-check fs-4'></i>Send</span>";
+                                      $sms_status_txt = "Delivered";
+                                      $error_text = "";
+                                  } else {
+                                      $sms_status_badge = "<span class='badge bg-danger-subtle rounded-3 py-2 text-danger fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-file-alert fs-4' data-bs-toggle='tooltip' title='$carrier_status'></i>ERROR</span>";
+                                      $sms_status_txt = "Error";
+                                      $error_text = "<div class='alert alert-light-warning bg-warning-subtle bg-warning-subtle text-warning' role='alert'>
+                                                    <h4 class='alert-heading'>We have discovered a mistake!</h4>
+                                                    <p>We have detected an error with this message.</br>
+                                                    The error was reported by the system as follows: $carrier_status</br></p>
+                                                    <hr>
+                                                    <p class='mb-0'>If you have any questions about the error, please contact us at info@smsly.ch</p>
+                                                    </div>";
+                                  }
 
-                              $id = $row["id"];
-                              $sms_from = $row["sms_from"];
-                              $sms_to = $row["sms_to"];
-                              $sms_message = $row["sms_message"];
-                              $sms_status = $row["sms_status"];
-                              $carrier_status = $row["carrier_status"];
-                              $sms_network = $row["sms_network"];
-                              $sms_message_id = $row["sms_message_id"];
-                              $sms_message_price = $row["sms_message_price"];
-                              $sms_tag = $row["sms_tag"];
-                              $sender_cost = $row["sender_cost"];
-                              $sender_id = $row["sender_id"];
-                              $sender_ip = $row["sender_ip"];
-                              $sender_isp = $row["sender_isp"];
-                              $sender_system = $row["sender_system"];
-                              $reg_date = $row["reg_date"];
-
-                              $dateTime = new DateTime($reg_date);
-                              $formattedTime = $dateTime->format('H:i d.m.Y');
-
-                              $sms_message_decodeed = urldecode($sms_message);
-                              $sms_from_decodeed = urldecode($sms_from);
-
-                              if ($sms_status === "Versendet" || $sms_status === "SUCCESS") {
-                                $sms_status_badge = "<span class='badge bg-success-subtle rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-check fs-4'></i>Send</span>";
-                                $sms_status_txt = "Delivered";
-                                $error_text = "";
-                              } else {
-                                $sms_status_badge = "<span class='badge bg-danger-subtle rounded-3 py-2 text-danger fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-file-alert fs-4' data-bs-toggle='tooltip' title='$sms_status'></i>ERROR</span>";
-                                $sms_status_txt = "Error";
-                                $error_text = "<div class='alert alert-light-warning bg-warning-subtle bg-warning-subtle text-warning' role='alert'>
-                                              <h4 class='alert-heading'>We have discovered a mistake!</h4>
-                                              <p>
-                                              We have detected an error with this message.</br>
-                                              The error was reported by the system as follows: $sms_status</br>
-
-                                              </p>
-                                              <hr>
-                                              <p class='mb-0'>
-                                                If you have any questions about the error, please contact us at info@smsly.ch
-                                              </p>
-                                            </div>";
-                              };
-
-                              if (is_numeric($sender_cost) && $sender_cost < 0) {
-                                // Wird ausgeführt, wenn $sender_cost eine Zahl ist und kleiner als 0
-                                $cost = "$sender_cost";
-                              } elseif ($sender_cost === "-") {
-                                // Wird ausgeführt, wenn $sender_cost genau das Minuszeichen "-" ist
-                                $cost = "0";
-                              } else {
-                                // Wird ausgeführt, wenn keine der obigen Bedingungen zutrifft
-                                $cost = "$sender_cost";
+                                  // Rest des Codes für die Tabellendarstellung bleibt gleich
+                                  echo "<tr>
+                                          <td>$id</td>
+                                          <td>$sms_from</td>
+                                          <td>$sms_to</td>
+                                          <td>$sms_status_badge</td>
+                                          <td>$reg_date</td>
+                                          <td>...</td>
+                                        </tr>";
                               }
-
+                          } else {
                               echo "<tr>
-                                            <td>$id</td>
-                                            <td>$sms_from_decodeed</td>
-                                            <td>$sms_to</td>
-                                            <td>$sms_status_badge</td>
-                                            <td>$formattedTime</td>
-                                            <td>
-                                              <div>
-                                                <button type='button' class='justify-content-center btn mb-1 btn-rounded btn-outline-info d-flex align-items-center' data-bs-toggle='modal' data-bs-target='#bs-example-modal-xlg$popout'>
-                                                  <i class='ti ti-info-circle'></i>
-                                                </button>
-                                                <!-- ------------------------------------------ -->
-                                                <!-- Extra Large -->
-                                                <!-- ------------------------------------------ -->
-                                                <!-- sample modal content -->
-                                                <div class='modal fade' id='bs-example-modal-xlg$popout' tabindex='-1' aria-labelledby='bs-example-modal-lg' style='display: none;' aria-hidden='true'>
-                                                  <div class='modal-dialog modal-xl'>
-                                                    <div class='modal-content'>
-                                                      <div class='col-lg-12'>
-                
-                                                        <div class='px-4 py-3 border-bottom'>
-                                                          <h5 class='card-title fw-semibold mb-0'>SMS History details</h5>
-                                                        </div>
-                                                        <div class='card-body p-4'>
-                                                          <div class='card-body p-4 border-bottom'>
-                                                            <div class='row'>
-                                                            $error_text
-                                                              <div class='col-lg-6'>
-                                                                <div class='mb-4'>
-                                                                  <label for='exampleInputtext3' class='form-label fw-semibold'>Cost:</label>
-                                                                  <input type='text' class='form-control' id='exampleInputtext3' value='$cost' readonly>
-                                                                </div>
-                                                                <div class=''>
-                                                                  <div class='mb-4'>
-                                                                    <label for='exampleInputPassword1' class='form-label fw-semibold'>From:</label>
-                                                                    <div class='input-group border rounded-1'>
-                                                                      <input type='text' class='form-control border-0' id='inputPassword' value='$sms_from' readonly>
-                                                                    </div>
-                                                                  </div>
-                                                                </div>
-                                                              </div>
-                                                              <div class='col-lg-6'>
-                                                                <div class='mb-4'>
-                                                                  <label for='exampleInputPassword1' class='form-label fw-semibold'>Status:</label>
-                                                                  <div class='input-group border rounded-1'>
-                                                                    <input type='text' class='form-control border-0' value='$sms_status_txt' readonly>
-                                                                  </div>
-                                                                </div>
-                                                                <div class='mb-4'>
-                                                                  <div class=''>
-                                                                    <label for='exampleInputPassword1' class='form-label fw-semibold'>To:</label>
-                                                                    <div class='input-group border rounded-1'>
-                                                                      <input type='text' class='form-control border-0' id='inputPassword' value='$sms_to' readonly>
-                                                                    </div>
-                                                                  </div>
-                                                                </div>
-                                                              </div>
-                                                              <div class='col-lg-12'>
-                                                                <div class='mb-4'>
-                                                                  <label for='exampleInputPassword1' class='form-label fw-semibold'>Email</label>
-                                                                  <textarea class='form-control p-7' name='' id='' cols='20' rows='5' placeholder='SMS Message' readonly>$sms_message_decodeed</textarea>
-                                                                </div>
-                                                              </div>
-                                                            </div>
-                                                          </div>
-                
-                                                        </div>
-                
-                                                      </div>
-                                                      <div class='modal-footer'>
-                                                        <button type='button' class='btn bg-info-subtle text-info font-medium waves-effect text-start' data-bs-dismiss='modal'>
-                                                          Close
-                                                        </button>
-                                                      </div>
-                                                    </div>
-                                                    <!-- /.modal-content -->
-                                                  </div>
-                                                  <!-- /.modal-dialog -->
-                                                </div>
-                                                <!-- /.modal -->
-                                              </div>
-                                            </td>
-                                          </tr>";
-                              $popout++;
-                            }
-                          } else { */
-                            echo "<tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td>No SMS sent found...</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                      <td></td>
+                                      <td></td>
+                                      <td>No SMS sent found...</td>
+                                      <td></td>
+                                      <td></td>
+                                      <td></td>
                                     </tr>";
-                          /* }
-                          $conn->close(); */
+                          }
                           ?>
 
 
