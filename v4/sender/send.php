@@ -151,15 +151,10 @@ try {
     );
     
     // Log der KI-Antwort
-    sendLogAsync('sms.sending.ai', $GLOBALS_USER_ID, 'ai.response', json_encode([
-        'fraud_score' => $fraudAnalysis['fraud_score'],
-        'analysis' => $fraudAnalysis['analysis'],
-        'sms_data' => [
-            'from' => $_GET['smsfrom'],
-            'country_code' => $countryCode,
-            'text' => $_GET['smstext']
-        ]
-    ]));
+    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'ai.analysis', 
+        'AI Fraud Score: ' . $fraudAnalysis['fraud_score'] . 
+        ', Analysis: ' . $fraudAnalysis['analysis']['overall_assessment']
+    );
     
     // Debug: Logging der finalen Entscheidung
     /* writeDebugLog([
