@@ -1,15 +1,5 @@
-<?php session_start(); ?>
-<!-- Zu Löschen bei Releas von V4 -->
-<?php include("../v4/auth-app/is-login.php"); ?>
-<!-- Zu Löschen bei Releas von V4 -->
+<?php require_once("auth/login-checker.php"); ?>
 
-
-<?php $filePath = "../version.txt"; ?>
-<?php $SystemVersion = file_get_contents($filePath); ?>
-<?php // include("../$SystemVersion/auth-app/is-login.php"); ?>
-
-
-<?php include("./app/check-api-credentials.php"); ?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme">
