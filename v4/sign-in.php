@@ -144,11 +144,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         // Callback-Verarbeitung für beide Parameter (callback und cb)
                         if (isset($_GET['callback']) && $loginManager->validateCallback($_GET['callback'])) {
-                            header("Location: /v4/" . $_GET['callback']);
+                            header("Location: /v4" . $_GET['callback']);
                         } elseif (isset($_GET['cb']) && $loginManager->validateCallback($_GET['cb'])) {
-                            header("Location: /v4/" . $_GET['cb']);
+                            header("Location: /v4" . $_GET['cb']);
                         } else {
-                            header("Location: /v4/");
+                            header("Location: /v4");
                         }
 
                         exit;
