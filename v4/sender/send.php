@@ -73,7 +73,7 @@ if (!$isValidSender) {
 
 // ChatGPT API Integration für Fraud-Erkennung
 function checkFraudWithGPT($smsText, $smsFrom, $countryCode) {
-    $api_key = getenv('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'); // API-Key aus Umgebungsvariablen
+    $api_key = 'DdWiZ6k4ZhDTzJijbcIcTx3HbjbS7iaqyaDKPCxswXaCak8bHrfuK8wI32XfddO47FOFyJiFgGh6vaM1';
     
     $prompt = <<<EOT
 Du agierst als Fraud-System. Dir werden per API drei Parameter übermittelt:
@@ -101,27 +101,21 @@ EOT;
 
     $curl = curl_init();
     curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://api.openai.com/v1/chat/completions',
+        CURLOPT_URL => 'https://api.infomaniak.com/1/ai/product_id/openai/chat/completions',
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
         CURLOPT_HTTPHEADER => [
             'Authorization: Bearer ' . $api_key,
-            'Content-Type: application/json',
-            'X-Data-Usage-Agreement: Data must not be used for training or model improvements'
+            'Content-Type: application/json'
         ],
         CURLOPT_POSTFIELDS => json_encode([
-            'model' => 'gpt-3.5-turbo',
             'messages' => [
-                [
-                    'role' => 'system',
-                    'content' => 'You are a fraud detection system. Respond only in the specified JSON format.'
-                ],
                 [
                     'role' => 'user',
                     'content' => $prompt
                 ]
             ],
-            'temperature' => 0.7
+            'model' => 'llama-3.3'
         ])
     ]);
 
@@ -130,8 +124,11 @@ EOT;
     curl_close($curl);
 
     if ($httpcode !== 200) {
-        throw new Exception('GPT API error');
+        throw new Exception('AI API error');
     }
+
+    // Vollständige API-Antwort loggen
+    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'ai.raw_response', $response);
 
     $result = json_decode($response, true);
     $fraudAnalysis = json_decode($result['choices'][0]['message']['content'], true);
