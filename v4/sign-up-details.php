@@ -66,13 +66,6 @@
                                                 <input type="tel" name="phone" id="phone" placeholder="XXX XXX XXXX"
                                                     class="form-control">
                                             </div>
-                                            <div class="d-flex flex-column flex-grow-1 gap-2">
-                                                <label for="email" class="fs-3 fw-semibold text-dark">
-                                                    Email *
-                                                </label>
-                                                <input type="email" name="email" id="email" placeholder="Email"
-                                                    class="form-control">
-                                            </div>
                                         </div>
                                         <div class="d-flex flex-column gap-2">
                                             <label for="enquire" class="fs-3 fw-semibold text-dark">Enquire related
