@@ -1,10 +1,11 @@
 <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
     <div class="card w-100">
         <div class="card-body">
-            <h5 class="card-title fw-semibold">Kontobewegungen</h5>
-            <p class="card-subtitle mb-7">Alle Bewegungen von Credits auf Ihrem Konto</p>
+            <h5 class="card-title fw-semibold">Account movements</h5>
+            <p class="card-subtitle mb-7">All movements of credits on your account</p>
             <div class="position-relative">
                 <?php
+
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
                     CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/payments?whereRelation[user][email]=florin.schildknecht%40sanona.org&timestamps=null',
