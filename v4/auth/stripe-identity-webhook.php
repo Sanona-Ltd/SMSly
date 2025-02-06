@@ -17,7 +17,9 @@ if ($event && isset($event['data']['object']) && $event['data']['object']['objec
     
     // Überprüfen ob die Verifizierung erfolgreich war
     if ($verificationSession['status'] === 'verified' && $userId) {
-        handleSuccessfulVerification($userId);
+        // Identity ID aus der Verifizierungssession extrahieren
+        $identityId = $verificationSession['id'];
+        handleSuccessfulVerification($userId, $identityId);
     } else {
         error_log("Verifizierung nicht erfolgreich oder keine User ID gefunden. Status: " . 
                  $verificationSession['status'] . ", User ID: " . $userId);
@@ -31,8 +33,9 @@ if ($event && isset($event['data']['object']) && $event['data']['object']['objec
 /**
  * Verarbeitet eine erfolgreiche Identitätsverifizierung
  * @param string $userId Die ID des verifizierten Benutzers
+ * @param string $identityId Die Stripe Identity Session ID
  */
-function handleSuccessfulVerification($userId) {
+function handleSuccessfulVerification($userId, $identityId) {
     try {
         // API-Aufruf an Sanona
         $curl = curl_init();
@@ -47,7 +50,10 @@ function handleSuccessfulVerification($userId) {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode(['verified' => "true"]),
+            CURLOPT_POSTFIELDS => json_encode([
+                'verified' => "true", 
+                'stripe_identity' => $identityId
+            ]),
             CURLOPT_HTTPHEADER => array(
                 'Accept: application/json',
                 'Content-Type: application/json',
