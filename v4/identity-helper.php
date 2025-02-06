@@ -118,6 +118,10 @@
         let timeLeft = 15;
         const timerElement = document.getElementById('timer');
         const verifyButton = document.getElementById('verifyButton');
+        
+        // Initial Button deaktivieren und Stil anpassen
+        verifyButton.style.pointerEvents = 'none';
+        verifyButton.style.opacity = '0.65';
 
         const timer = setInterval(() => {
             timeLeft--;
@@ -126,6 +130,8 @@
             if (timeLeft <= 0) {
                 clearInterval(timer);
                 verifyButton.removeAttribute('disabled');
+                verifyButton.style.pointerEvents = 'auto';
+                verifyButton.style.opacity = '1';
                 verifyButton.textContent = 'Start Verification';
             }
         }, 1000);
