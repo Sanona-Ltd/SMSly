@@ -67,6 +67,23 @@
                                                     class="form-control">
                                             </div>
                                         </div>
+                                        <hr>
+                                        <div class="d-flex flex-sm-row flex-column gap-sm-7 gap-3">
+                                            <div class="d-flex flex-column flex-grow-1 gap-2">
+                                                <label for="Fname" class="fs-3 fw-semibold text-dark">
+                                                    Street *
+                                                </label>
+                                                <input type="text" name="Fname" id="Fname" placeholder="First Name"
+                                                    class="form-control" spellcheck="false" data-ms-editor="true">
+                                            </div>
+                                            <div class="d-flex flex-column flex-grow-1 gap-2">
+                                                <label for="Lname" class="fs-3 fw-semibold text-dark">
+                                                    House Number *
+                                                </label>
+                                                <input type="text" name="Lname" id="Lname" placeholder="Last name"
+                                                    class="form-control" spellcheck="false" data-ms-editor="true">
+                                            </div>
+                                        </div>
                                         <div class="d-flex flex-column gap-2">
                                             <label for="enquire" class="fs-3 fw-semibold text-dark">Enquire related
                                                 to *</label>
