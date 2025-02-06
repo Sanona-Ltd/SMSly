@@ -17,8 +17,12 @@ try {
         'metadata' => [
             'user_id' => $_SESSION["user_id"]
         ],
-        'return_url' => 'https://smsly.ch/v4/auth/stripe-identity-callback.php'
+        'return_url' => 'https://smsly.ch/v4/auth/stripe-identity-callback.php',
+        'allowed_types' => ['id_card', 'passport'], // Nur Personalausweis und Pass erlaubt
+        'require_id_number' => true,                // Dokumentennummer erforderlich
+        'require_matching_selfie' => true,          // Selfie-Überprüfung aktivieren
 
+        'require_live_capture' => true              // Verhindert Upload von bestehenden Fotos
     ]);
 
     // Weiterleitung zur Stripe Verification URL
