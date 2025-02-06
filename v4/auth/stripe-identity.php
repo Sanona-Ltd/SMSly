@@ -17,7 +17,7 @@ try {
         'metadata' => [
             'user_id' => $_SESSION["user_id"]
         ],
-        'return_url' => 'https://smsly.ch/v4/auth/stripe-identity-callback.php'   // Optional
+        'return_url' => 'https://smsly.ch/v4/auth/stripe-identity-callback.php'
 
     ]);
 
