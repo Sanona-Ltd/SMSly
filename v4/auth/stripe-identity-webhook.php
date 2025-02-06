@@ -6,7 +6,7 @@ $event = json_decode($payload, true);
 
 // Logging für Debugging-Zwecke
 error_log("Stripe Webhook empfangen: " . print_r($event, true));
-echo "Stripe Webhook empfangen: " . print_r($event, true);
+// echo "Stripe Webhook empfangen: " . print_r($event, true);
 
 // Überprüfen ob es sich um ein gültiges Verifizierungs-Event handelt
 if ($event && isset($event['data']['object']) && $event['data']['object']['object'] === 'identity.verification_session') {
@@ -23,11 +23,11 @@ if ($event && isset($event['data']['object']) && $event['data']['object']['objec
     } else {
         error_log("Verifizierung nicht erfolgreich oder keine User ID gefunden. Status: " . 
                  $verificationSession['status'] . ", User ID: " . $userId);
-                 echo "Verifizierung nicht erfolgreich oder keine User ID gefunden. Status: " . $verificationSession['status'] . ", User ID: " . $userId;
+                 // echo "Verifizierung nicht erfolgreich oder keine User ID gefunden. Status: " . $verificationSession['status'] . ", User ID: " . $userId;
     }
 } else {
     error_log("Ungültiges oder nicht unterstütztes Webhook-Event empfangen");
-    echo "Ungültiges oder nicht unterstütztes Webhook-Event empfangen";
+    // echo "Ungültiges oder nicht unterstütztes Webhook-Event empfangen";
 }
 
 /**
@@ -76,10 +76,10 @@ function handleSuccessfulVerification($userId, $identityId) {
         }
 
         error_log("Verifizierung erfolgreich aktualisiert für User ID: " . $userId);
-        echo "Verifizierung erfolgreich aktualisiert für User ID: " . $userId;
+        // echo "Verifizierung erfolgreich aktualisiert für User ID: " . $userId;
     } catch (Exception $e) {
         error_log("Fehler bei der Verarbeitung der Identitätsverifizierung: " . $e->getMessage());
         http_response_code(500);
-        echo "Fehler bei der Verarbeitung der Identitätsverifizierung: " . $e->getMessage();
+        // echo "Fehler bei der Verarbeitung der Identitätsverifizierung: " . $e->getMessage();
     }
 }
