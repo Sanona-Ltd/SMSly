@@ -64,19 +64,24 @@ function handleSuccessfulVerification($userId, $identityId) {
             if (isset($verificationReport->document->files[0])) {
                 try {
                     $frontImage = \Stripe\File::retrieve($verificationReport->document->files[0]);
+                    error_log("Front Image Data: " . print_r($frontImage, true));
                     
                     // CURL für den Download verwenden
                     $ch = curl_init();
                     curl_setopt_array($ch, [
-                        CURLOPT_URL => "https://files.stripe.com/v1/files/" . $verificationReport->document->files[0] . "/contents",
+                        CURLOPT_URL => $frontImage->links->data[0]->url,
                         CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_HTTPHEADER => [
-                            'Authorization: Bearer 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'
-                        ]
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_SSL_VERIFYPEER => true
                     ]);
                     
                     $frontImageContent = curl_exec($ch);
                     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    
+                    if (curl_errno($ch)) {
+                        error_log("CURL Error (Front): " . curl_error($ch));
+                    }
+                    
                     curl_close($ch);
                     
                     if ($frontImageContent === false || $httpCode !== 200) {
@@ -97,19 +102,24 @@ function handleSuccessfulVerification($userId, $identityId) {
             if (isset($verificationReport->document->files[1])) {
                 try {
                     $backImage = \Stripe\File::retrieve($verificationReport->document->files[1]);
+                    error_log("Back Image Data: " . print_r($backImage, true));
                     
                     // CURL für den Download verwenden
                     $ch = curl_init();
                     curl_setopt_array($ch, [
-                        CURLOPT_URL => "https://files.stripe.com/v1/files/" . $verificationReport->document->files[1] . "/contents",
+                        CURLOPT_URL => $backImage->links->data[0]->url,
                         CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_HTTPHEADER => [
-                            'Authorization: Bearer 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'
-                        ]
+                        CURLOPT_FOLLOWLOCATION => true,
+                        CURLOPT_SSL_VERIFYPEER => true
                     ]);
                     
                     $backImageContent = curl_exec($ch);
                     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    
+                    if (curl_errno($ch)) {
+                        error_log("CURL Error (Back): " . curl_error($ch));
+                    }
+                    
                     curl_close($ch);
                     
                     if ($backImageContent === false || $httpCode !== 200) {
