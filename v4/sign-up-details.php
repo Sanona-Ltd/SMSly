@@ -32,7 +32,7 @@
             class="position-relative overflow-hidden radial-gradient min-vh-100 w-100 d-flex align-items-center justify-content-center">
             <div class="d-flex align-items-center justify-content-center w-100">
                 <div class="row justify-content-center w-100">
-                    <div class="col-md-8 col-lg-6 col-xxl-3">
+                    <div class="col-md-12 col-lg-6 col-xxl-3">
                         <div class="card mb-0">
                             <div class="card-body">
                                 <a href="/" class="text-nowrap logo-img text-center d-block mb-5 w-100">
@@ -40,45 +40,57 @@
                                     <img src="./assets/images/logo.png" class="light-logo" alt="Logo-light" />
                                 </a>
 
-                                <?php
-                                if (isset($_SESSION["errorText"])) {
-                                    $errorcode = $_SESSION["errorText"];
-                                    echo "<div class='alert alert-light-warning bg-danger-subtle bg-warning-subtle text-warning' role='alert'>
-                                        <h4 class='alert-heading'>Oh No! An error has occurred.</h4>
-                                         <p>$errorcode</p>
-                                        </div>";
-                                    unset($_SESSION["errorText"]);
-                                }
-                                ?>
-
-                                <form method="get" action="auth-app/register2.php">
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Username</label>
-                                        <input type="text" name="username" class="form-control" id="exampleInputtext"
-                                            aria-describedby="textHelp">
+                                <form class="">
+                                    <div class="d-flex flex-column gap-sm-7 gap-3">
+                                        <div class="d-flex flex-sm-row flex-column gap-sm-7 gap-3">
+                                            <div class="d-flex flex-column flex-grow-1 gap-2">
+                                                <label for="Fname" class="fs-3 fw-semibold text-dark">
+                                                    First Name *
+                                                </label>
+                                                <input type="text" name="Fname" id="Fname" placeholder="First Name"
+                                                    class="form-control" spellcheck="false" data-ms-editor="true">
+                                            </div>
+                                            <div class="d-flex flex-column flex-grow-1 gap-2">
+                                                <label for="Lname" class="fs-3 fw-semibold text-dark">
+                                                    Last Name *
+                                                </label>
+                                                <input type="text" name="Lname" id="Lname" placeholder="Last name"
+                                                    class="form-control" spellcheck="false" data-ms-editor="true">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-sm-row flex-column gap-sm-7 gap-3">
+                                            <div class="d-flex flex-column flex-grow-1 gap-2">
+                                                <label for="phone" class="fs-3 fw-semibold text-dark">
+                                                    Phone Number *
+                                                </label>
+                                                <input type="tel" name="phone" id="phone" placeholder="XXX XXX XXXX"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="d-flex flex-column flex-grow-1 gap-2">
+                                                <label for="email" class="fs-3 fw-semibold text-dark">
+                                                    Email *
+                                                </label>
+                                                <input type="email" name="email" id="email" placeholder="Email"
+                                                    class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="d-flex flex-column gap-2">
+                                            <label for="enquire" class="fs-3 fw-semibold text-dark">Enquire related
+                                                to *</label>
+                                            <select class="form-select w-auto">
+                                                <option value="1">General Enquiry</option>
+                                                <option value="2">Customer Service Enquiry</option>
+                                                <option value="3">Legal Enquiry</option>
+                                                <option value="4">General Enquiry</option>
+                                            </select>
+                                        </div>
+                                        <div class="d-flex flex-column gap-2">
+                                            <label for="message" class="fs-3 fw-semibold text-dark">Message</label>
+                                            <textarea name="message" id="message" class="form-control" rows="5"
+                                                spellcheck="false" data-ms-editor="true"></textarea>
+                                        </div>
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                                        <input type="email" name="email" class="form-control" id="exampleInputEmail1"
-                                            aria-describedby="emailHelp">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="exampleInputPassword1" class="form-label">Password</label>
-                                        <input type="password" name="password" class="form-control"
-                                            id="exampleInputPassword1">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="exampleInputPassword1" class="form-label">Password
-                                            confirmation</label>
-                                        <input type="password" name="password_confirmation" class="form-control"
-                                            id="exampleInputPassword1">
-                                    </div>
-                                    <input type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2"
-                                        value="Sign Up">
-                                    <div class="d-flex align-items-center justify-content-center">
-                                        <p class="fs-4 mb-0 fw-medium">You already have an account?</p>
-                                        <a class="text-primary fw-medium ms-2" href="./sign-in">Sign In</a>
-                                    </div>
+                                    <button class="btn btn-primary mt-sm-7 mt-3 px-9 py-6">Submit</button>
                                 </form>
                             </div>
                         </div>
