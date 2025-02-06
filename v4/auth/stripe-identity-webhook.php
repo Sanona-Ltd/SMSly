@@ -46,8 +46,7 @@ function handleSuccessfulVerification($userId, $identityId) {
         
         // Verification Report abrufen
         $verificationReport = \Stripe\Identity\VerificationReport::retrieve(
-            $verificationSession->last_verification_report,
-            ['expand' => ['document.front', 'document.back', 'selfie']]
+            $verificationSession->last_verification_report
         );
         
         // Debug-Ausgabe
@@ -60,62 +59,47 @@ function handleSuccessfulVerification($userId, $identityId) {
         }
 
         // Lade die Dokumentbilder herunter
-        if (isset($verificationReport->document) && isset($verificationReport->document->front->file->id)) {
-            error_log("Front document file ID: " . $verificationReport->document->front->file->id);
-            try {
-                $frontImage = \Stripe\File::retrieve($verificationReport->document->front->file->id);
-                $frontImageContent = file_get_contents($frontImage->url);
-                if ($frontImageContent === false) {
-                    throw new Exception("Konnte Vorderseite nicht herunterladen");
+        if (isset($verificationReport->document->files) && is_array($verificationReport->document->files)) {
+            // Vorderseite (erstes Bild)
+            if (isset($verificationReport->document->files[0])) {
+                try {
+                    $frontImage = \Stripe\File::retrieve($verificationReport->document->files[0]);
+                    $frontImageContent = file_get_contents($frontImage->url);
+                    if ($frontImageContent === false) {
+                        throw new Exception("Konnte Vorderseite nicht herunterladen");
+                    }
+                    file_put_contents(
+                        $userDirectory . '/id_front.jpg',
+                        $frontImageContent
+                    );
+                    error_log("Vorderseite erfolgreich gespeichert");
+                } catch (Exception $e) {
+                    error_log("Fehler beim Speichern der Vorderseite: " . $e->getMessage());
                 }
-                file_put_contents(
-                    $userDirectory . '/id_front.jpg',
-                    $frontImageContent
-                );
-                error_log("Vorderseite erfolgreich gespeichert");
-            } catch (Exception $e) {
-                error_log("Fehler beim Speichern der Vorderseite: " . $e->getMessage());
             }
-        }
 
-        if (isset($verificationReport->document) && isset($verificationReport->document->back->file->id)) {
-            error_log("Back document file ID: " . $verificationReport->document->back->file->id);
-            try {
-                $backImage = \Stripe\File::retrieve($verificationReport->document->back->file->id);
-                $backImageContent = file_get_contents($backImage->url);
-                if ($backImageContent === false) {
-                    throw new Exception("Konnte Rückseite nicht herunterladen");
+            // Rückseite (zweites Bild)
+            if (isset($verificationReport->document->files[1])) {
+                try {
+                    $backImage = \Stripe\File::retrieve($verificationReport->document->files[1]);
+                    $backImageContent = file_get_contents($backImage->url);
+                    if ($backImageContent === false) {
+                        throw new Exception("Konnte Rückseite nicht herunterladen");
+                    }
+                    file_put_contents(
+                        $userDirectory . '/id_back.jpg',
+                        $backImageContent
+                    );
+                    error_log("Rückseite erfolgreich gespeichert");
+                } catch (Exception $e) {
+                    error_log("Fehler beim Speichern der Rückseite: " . $e->getMessage());
                 }
-                file_put_contents(
-                    $userDirectory . '/id_back.jpg',
-                    $backImageContent
-                );
-                error_log("Rückseite erfolgreich gespeichert");
-            } catch (Exception $e) {
-                error_log("Fehler beim Speichern der Rückseite: " . $e->getMessage());
-            }
-        }
-
-        if (isset($verificationReport->selfie) && isset($verificationReport->selfie->file->id)) {
-            error_log("Selfie file ID: " . $verificationReport->selfie->file->id);
-            try {
-                $selfieImage = \Stripe\File::retrieve($verificationReport->selfie->file->id);
-                $selfieImageContent = file_get_contents($selfieImage->url);
-                if ($selfieImageContent === false) {
-                    throw new Exception("Konnte Selfie nicht herunterladen");
-                }
-                file_put_contents(
-                    $userDirectory . '/selfie.jpg',
-                    $selfieImageContent
-                );
-                error_log("Selfie erfolgreich gespeichert");
-            } catch (Exception $e) {
-                error_log("Fehler beim Speichern des Selfies: " . $e->getMessage());
             }
         }
 
         error_log("Identitätsbilder erfolgreich gespeichert für User ID: " . $userId);
         echo "Identitätsbilder erfolgreich gespeichert für User ID: " . $userId;
+
         // API-Aufruf an Sanona
         $curl = curl_init();
         $apiEndpoint = "https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user/update/" . $userId;
@@ -161,7 +145,6 @@ function handleSuccessfulVerification($userId, $identityId) {
         echo "Fehler beim Herunterladen der Identitätsbilder: " . $e->getMessage();
         // Weitermachen mit dem API-Aufruf, auch wenn das Bildherunterladen fehlschlägt
     }
-
 
     try {
         // API-Aufruf an Sanona
