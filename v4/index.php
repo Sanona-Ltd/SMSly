@@ -162,8 +162,26 @@
                           // Konvertiere die JSON-Antwort in ein PHP-Array
                           $data = json_decode($response, true);
 
-                          // Konvertiere die JSON-Antwort in ein PHP-Array
-                          $data = json_decode($response, true);
+                          // Zeitumwandlungsfunktion - außerhalb der Schleife definieren
+                          function formatTimeAgo($published_at) {
+                              $timestamp = strtotime($published_at);
+                              $now = time();
+                              $diff = $now - $timestamp;
+                              
+                              if ($diff < 60) {
+                                  return "vor " . $diff . " Sekunden";
+                              } elseif ($diff < 3600) {
+                                  return "vor " . floor($diff/60) . " Minuten";
+                              } elseif ($diff < 7200) {
+                                  return "vor einer Stunde";
+                              } elseif ($diff < 86400) {
+                                  return "vor " . floor($diff/3600) . " Stunden";
+                              } elseif ($diff < 129600) { // 36 Stunden
+                                  return "gestern";
+                              } else {
+                                  return date("H:i d.m.Y", $timestamp);
+                              }
+                          }
 
                           if (count($data) > 0) {
                             // Verarbeitung jedes Datensatzes
@@ -171,28 +189,6 @@
                               $id = $sms['id'];
                               $locale = $sms['locale'];
                               $published_at = $sms['published_at'];
-                              
-                              // Zeitumwandlungsfunktion
-                              function formatTimeAgo($published_at) {
-                                  $timestamp = strtotime($published_at);
-                                  $now = time();
-                                  $diff = $now - $timestamp;
-                                  
-                                  if ($diff < 60) {
-                                      return "vor " . $diff . " Sekunden";
-                                  } elseif ($diff < 3600) {
-                                      return "vor " . floor($diff/60) . " Minuten";
-                                  } elseif ($diff < 7200) {
-                                      return "vor einer Stunde";
-                                  } elseif ($diff < 86400) {
-                                      return "vor " . floor($diff/3600) . " Stunden";
-                                  } elseif ($diff < 129600) { // 36 Stunden
-                                      return "gestern";
-                                  } else {
-                                      return date("H:i d.m.Y", $timestamp);
-                                  }
-                              }
-                              
                               $formatted_time = formatTimeAgo($published_at);
                               
                               $sms_from = $sms['sms_from'];
