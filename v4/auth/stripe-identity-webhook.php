@@ -1,7 +1,5 @@
 <?php
 
-require_once '../config/init.php';
-
 // Empfangen des Webhook-Payloads
 $payload = @file_get_contents('php://input');
 $event = json_decode($payload, true);
@@ -29,8 +27,6 @@ function handleSuccessfulVerification($userId) {
     
     try {
         // Aktualisieren des Verifizierungsstatus in der Datenbank
-        $stmt = $db->prepare("UPDATE users SET is_verified = 1, verified_at = NOW() WHERE id = ?");
-        $stmt->execute([$userId]);
         
         // API-Aufruf an Sanona
         $curl = curl_init();
