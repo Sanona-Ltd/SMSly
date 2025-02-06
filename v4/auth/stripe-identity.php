@@ -21,7 +21,6 @@ try {
         'options' => [
             'document' => [
                 'allowed_types' => ['id_card', 'passport'],
-                'require_id_number' => true,
                 'require_matching_selfie' => true,
                 'require_live_capture' => true
             ]
