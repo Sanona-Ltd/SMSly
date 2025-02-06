@@ -76,10 +76,10 @@ function handleSuccessfulVerification($userId, $identityId) {
         }
 
         error_log("Verifizierung erfolgreich aktualisiert für User ID: " . $userId);
-        // echo "Verifizierung erfolgreich aktualisiert für User ID: " . $userId;
+        echo "Verifizierung erfolgreich aktualisiert für User ID: " . $userId;
     } catch (Exception $e) {
         error_log("Fehler bei der Verarbeitung der Identitätsverifizierung: " . $e->getMessage());
         http_response_code(500);
-        // echo "Fehler bei der Verarbeitung der Identitätsverifizierung: " . $e->getMessage();
+        echo "Fehler bei der Verarbeitung der Identitätsverifizierung: " . $e->getMessage();
     }
 }
