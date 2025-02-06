@@ -1,8 +1,8 @@
+<?php session_start(); ?>
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme">
-<?php
-session_start();
-?>
+
 
 <head>
   <!-- Required meta tags -->
@@ -28,7 +28,8 @@ session_start();
     <img src="./assets/images/logo.png" alt="loader" class="lds-ripple img-fluid" />
   </div>
   <div id="main-wrapper">
-    <div class="position-relative overflow-hidden radial-gradient min-vh-100 w-100 d-flex align-items-center justify-content-center">
+    <div
+      class="position-relative overflow-hidden radial-gradient min-vh-100 w-100 d-flex align-items-center justify-content-center">
       <div class="d-flex align-items-center justify-content-center w-100">
         <div class="row justify-content-center w-100">
           <div class="col-md-8 col-lg-6 col-xxl-3">
@@ -46,14 +47,15 @@ session_start();
                           <h4 class='alert-heading'>Oh No! An error has occurred.</h4>
                           <p>$errorcode</p>
                         </div>";
-                        unset($_SESSION["errorText"]);
-                  }
+                  unset($_SESSION["errorText"]);
+                }
                 ?>
 
                 <form method="get" action="auth-app/register2.php">
                   <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Username</label>
-                    <input type="text" name="username" class="form-control" id="exampleInputtext" aria-describedby="textHelp">
+                    <input type="text" name="username" class="form-control" id="exampleInputtext"
+                      aria-describedby="textHelp">
                   </div>
                   <!-- <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Surname</label>
@@ -61,7 +63,8 @@ session_start();
                   </div> -->
                   <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Email address</label>
-                    <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <input type="email" name="email" class="form-control" id="exampleInputEmail1"
+                      aria-describedby="emailHelp">
                   </div>
                   <div class="mb-4">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
