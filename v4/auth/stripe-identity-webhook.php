@@ -65,19 +65,24 @@ function handleSuccessfulVerification($userId, $identityId) {
                 try {
                     $frontImage = \Stripe\File::retrieve($verificationReport->document->files[0]);
                     
-                    // Stream Kontext mit Stripe Authentifizierung
-                    $opts = [
-                        'http' => [
-                            'method' => 'GET',
-                            'header' => 'Authorization: Bearer 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'
+                    // CURL für den Download verwenden
+                    $ch = curl_init();
+                    curl_setopt_array($ch, [
+                        CURLOPT_URL => "https://files.stripe.com/v1/files/" . $verificationReport->document->files[0] . "/contents",
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_HTTPHEADER => [
+                            'Authorization: Bearer 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'
                         ]
-                    ];
-                    $context = stream_context_create($opts);
+                    ]);
                     
-                    $frontImageContent = file_get_contents($frontImage->url, false, $context);
-                    if ($frontImageContent === false) {
-                        throw new Exception("Konnte Vorderseite nicht herunterladen");
+                    $frontImageContent = curl_exec($ch);
+                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    curl_close($ch);
+                    
+                    if ($frontImageContent === false || $httpCode !== 200) {
+                        throw new Exception("Konnte Vorderseite nicht herunterladen (HTTP Code: " . $httpCode . ")");
                     }
+                    
                     file_put_contents(
                         $userDirectory . '/id_front.jpg',
                         $frontImageContent
@@ -93,19 +98,24 @@ function handleSuccessfulVerification($userId, $identityId) {
                 try {
                     $backImage = \Stripe\File::retrieve($verificationReport->document->files[1]);
                     
-                    // Stream Kontext mit Stripe Authentifizierung
-                    $opts = [
-                        'http' => [
-                            'method' => 'GET',
-                            'header' => 'Authorization: Bearer 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'
+                    // CURL für den Download verwenden
+                    $ch = curl_init();
+                    curl_setopt_array($ch, [
+                        CURLOPT_URL => "https://files.stripe.com/v1/files/" . $verificationReport->document->files[1] . "/contents",
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_HTTPHEADER => [
+                            'Authorization: Bearer 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'
                         ]
-                    ];
-                    $context = stream_context_create($opts);
+                    ]);
                     
-                    $backImageContent = file_get_contents($backImage->url, false, $context);
-                    if ($backImageContent === false) {
-                        throw new Exception("Konnte Rückseite nicht herunterladen");
+                    $backImageContent = curl_exec($ch);
+                    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                    curl_close($ch);
+                    
+                    if ($backImageContent === false || $httpCode !== 200) {
+                        throw new Exception("Konnte Rückseite nicht herunterladen (HTTP Code: " . $httpCode . ")");
                     }
+                    
                     file_put_contents(
                         $userDirectory . '/id_back.jpg',
                         $backImageContent
