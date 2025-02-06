@@ -3,7 +3,7 @@ session_start();
 require_once '../../vendor/autoload.php';
 
 // Stripe API-Key (Ersetzen Sie dies mit Ihrem tatsächlichen Secret Key)
-$stripe = new \Stripe\StripeClient('sk_test_YOUR_STRIPE_SECRET_KEY');
+$stripe = new \Stripe\StripeClient('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');
 
 try {
     // Überprüfen ob Benutzer angemeldet ist
