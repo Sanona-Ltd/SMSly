@@ -67,7 +67,7 @@
 
                     <div class="row justify-content-center">
                         <div class="col-lg-6 text-center">
-                            <h2 class="fw-bolder mb-0 fs-8 lh-base">We will check the information you provide.</h2>
+                            <h2 class="fw-bolder mb-0 fs-8 lh-base">Verify your Account</h2>
                         </div>
                     </div>
                     </br>
