@@ -64,7 +64,17 @@ function handleSuccessfulVerification($userId, $identityId) {
             if (isset($verificationReport->document->files[0])) {
                 try {
                     $frontImage = \Stripe\File::retrieve($verificationReport->document->files[0]);
-                    $frontImageContent = file_get_contents($frontImage->url);
+                    
+                    // Stream Kontext mit Stripe Authentifizierung
+                    $opts = [
+                        'http' => [
+                            'method' => 'GET',
+                            'header' => 'Authorization: Bearer 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'
+                        ]
+                    ];
+                    $context = stream_context_create($opts);
+                    
+                    $frontImageContent = file_get_contents($frontImage->url, false, $context);
                     if ($frontImageContent === false) {
                         throw new Exception("Konnte Vorderseite nicht herunterladen");
                     }
@@ -82,7 +92,17 @@ function handleSuccessfulVerification($userId, $identityId) {
             if (isset($verificationReport->document->files[1])) {
                 try {
                     $backImage = \Stripe\File::retrieve($verificationReport->document->files[1]);
-                    $backImageContent = file_get_contents($backImage->url);
+                    
+                    // Stream Kontext mit Stripe Authentifizierung
+                    $opts = [
+                        'http' => [
+                            'method' => 'GET',
+                            'header' => 'Authorization: Bearer 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'
+                        ]
+                    ];
+                    $context = stream_context_create($opts);
+                    
+                    $backImageContent = file_get_contents($backImage->url, false, $context);
                     if ($backImageContent === false) {
                         throw new Exception("Konnte Rückseite nicht herunterladen");
                     }
