@@ -74,12 +74,13 @@
                     </br>
 
                     <div class="row">
-                        <div class="col-12 text-center">
-
+                        <div class="col-2"></div>
+                        <div class="col-8">
                             <a href="auth/stripe-identity.php" class="btn btn-primary fw-bolder rounded-2 py-6 w-100 text-capitalize">
                                 Start Verification
                             </a>
                         </div>
+                        <div class="col-2"></div>
                     </div>
                 </div>
 
