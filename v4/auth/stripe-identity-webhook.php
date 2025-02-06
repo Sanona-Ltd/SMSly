@@ -42,8 +42,14 @@ function handleSuccessfulVerification($userId, $identityId) {
         \Stripe\Stripe::setApiKey("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");
 
         // Bilder von Stripe herunterladen
-        $verificationSession = \Stripe\Identity\VerificationSession::retrieve($identityId);
+        $verificationSession = \Stripe\Identity\VerificationSession::retrieve(
+            $identityId,
+            ['expand' => ['document.front', 'document.back', 'selfie']]
+        );
         
+        // Debug-Ausgabe
+        error_log("Verification Session Daten: " . print_r($verificationSession, true));
+
         // Erstelle den Ordner für die Bilder
         $userDirectory = __DIR__ . '/../secure/' . $userId;
         if (!file_exists($userDirectory)) {
@@ -51,34 +57,58 @@ function handleSuccessfulVerification($userId, $identityId) {
         }
 
         // Lade die Dokumentbilder herunter
-        if (isset($verificationSession->document->front->file)) {
-            $frontImage = \Stripe\FileLink::create([
-                'file' => $verificationSession->document->front->file
-            ]);
-            file_put_contents(
-                $userDirectory . '/id_front.jpg',
-                file_get_contents($frontImage->url)
-            );
+        if (isset($verificationSession->document) && isset($verificationSession->document->front)) {
+            error_log("Front document data: " . print_r($verificationSession->document->front, true));
+            try {
+                $frontImage = \Stripe\File::retrieve($verificationSession->document->front->id);
+                $frontImageContent = file_get_contents($frontImage->url);
+                if ($frontImageContent === false) {
+                    throw new Exception("Konnte Vorderseite nicht herunterladen");
+                }
+                file_put_contents(
+                    $userDirectory . '/id_front.jpg',
+                    $frontImageContent
+                );
+                error_log("Vorderseite erfolgreich gespeichert");
+            } catch (Exception $e) {
+                error_log("Fehler beim Speichern der Vorderseite: " . $e->getMessage());
+            }
         }
 
-        if (isset($verificationSession->document->back->file)) {
-            $backImage = \Stripe\FileLink::create([
-                'file' => $verificationSession->document->back->file
-            ]);
-            file_put_contents(
-                $userDirectory . '/id_back.jpg',
-                file_get_contents($backImage->url)
-            );
+        if (isset($verificationSession->document) && isset($verificationSession->document->back)) {
+            error_log("Back document data: " . print_r($verificationSession->document->back, true));
+            try {
+                $backImage = \Stripe\File::retrieve($verificationSession->document->back->id);
+                $backImageContent = file_get_contents($backImage->url);
+                if ($backImageContent === false) {
+                    throw new Exception("Konnte Rückseite nicht herunterladen");
+                }
+                file_put_contents(
+                    $userDirectory . '/id_back.jpg',
+                    $backImageContent
+                );
+                error_log("Rückseite erfolgreich gespeichert");
+            } catch (Exception $e) {
+                error_log("Fehler beim Speichern der Rückseite: " . $e->getMessage());
+            }
         }
 
-        if (isset($verificationSession->selfie->file)) {
-            $selfieImage = \Stripe\FileLink::create([
-                'file' => $verificationSession->selfie->file
-            ]);
-            file_put_contents(
-                $userDirectory . '/selfie.jpg',
-                file_get_contents($selfieImage->url)
-            );
+        if (isset($verificationSession->selfie)) {
+            error_log("Selfie data: " . print_r($verificationSession->selfie, true));
+            try {
+                $selfieImage = \Stripe\File::retrieve($verificationSession->selfie->id);
+                $selfieImageContent = file_get_contents($selfieImage->url);
+                if ($selfieImageContent === false) {
+                    throw new Exception("Konnte Selfie nicht herunterladen");
+                }
+                file_put_contents(
+                    $userDirectory . '/selfie.jpg',
+                    $selfieImageContent
+                );
+                error_log("Selfie erfolgreich gespeichert");
+            } catch (Exception $e) {
+                error_log("Fehler beim Speichern des Selfies: " . $e->getMessage());
+            }
         }
 
         error_log("Identitätsbilder erfolgreich gespeichert für User ID: " . $userId);
