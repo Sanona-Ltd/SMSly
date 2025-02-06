@@ -89,7 +89,8 @@ if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) {
             $current_path = $_SERVER['REQUEST_URI'];
             $allowed_pages = array(
                 '/v4/identity',
-                '/v4/identity-helper'
+                '/v4/identity-helper',
+                '/v4/auth/stripe-identity'
             );
             
             $is_allowed = false;

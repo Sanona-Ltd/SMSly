@@ -75,13 +75,14 @@
 
                     <div class="row">
                         <div class="col-12 text-center">
-                            <div id="status" class="mb-3">Verifizierung wird überprüft...</div>
-                            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-                                <span class="visually-hidden">Lädt...</span>
-                            </div>
+
+                            <a href="auth/stripe-identity.php" class="btn btn-primary fw-bolder rounded-2 py-6 w-100 text-capitalize">
+                                Start Verification
+                            </a>
                         </div>
                     </div>
                 </div>
+
             </div>
 
         </div>
