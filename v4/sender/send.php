@@ -24,6 +24,17 @@ if (!preg_match('/^\+?[1-9]\d{1,14}$/', $phone)) {
     exit();
 }
 
+// prüfung Contingent
+$messageLength = strlen($_GET['smstext']);
+$estimatedSegments = ceil($messageLength / 160);  // Berechne geschätzte Anzahl der SMS-Segmente
+
+if ($estimatedSegments > $GLOBALS_USER_SMSCONTINGENT) {
+    $_SESSION['sms-status'] = 'INSUFFICIENT_CONTINGENT';
+    sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.blocked', 'Insufficient SMS contingent. Required: ' . $estimatedSegments . ', Available: ' . $GLOBALS_USER_SMSCONTINGENT);
+    header('Location: ../sms-send.php');
+    exit();
+}
+
 // Blacklist-Prüfung
 $isBlacklisted = false; // TODO: Implementiere Blacklist-Prüfung
 if ($isBlacklisted) {
