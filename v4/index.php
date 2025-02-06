@@ -142,7 +142,7 @@
                           $curl = curl_init();
 
                           curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-send?sort=created_at%3ADESC&limit=5',
+                            CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-send?sort=created_at%3ADESC&limit=5&timestamps',
                             CURLOPT_RETURNTRANSFER => true,
                             CURLOPT_ENCODING => '',
                             CURLOPT_MAXREDIRS => 10,
@@ -170,6 +170,31 @@
                             foreach ($data as $sms) {
                               $id = $sms['id'];
                               $locale = $sms['locale'];
+                              $published_at = $sms['published_at'];
+                              
+                              // Zeitumwandlungsfunktion
+                              function formatTimeAgo($published_at) {
+                                  $timestamp = strtotime($published_at);
+                                  $now = time();
+                                  $diff = $now - $timestamp;
+                                  
+                                  if ($diff < 60) {
+                                      return "vor " . $diff . " Sekunden";
+                                  } elseif ($diff < 3600) {
+                                      return "vor " . floor($diff/60) . " Minuten";
+                                  } elseif ($diff < 7200) {
+                                      return "vor einer Stunde";
+                                  } elseif ($diff < 86400) {
+                                      return "vor " . floor($diff/3600) . " Stunden";
+                                  } elseif ($diff < 129600) { // 36 Stunden
+                                      return "gestern";
+                                  } else {
+                                      return date("H:i d.m.Y", $timestamp);
+                                  }
+                              }
+                              
+                              $formatted_time = formatTimeAgo($published_at);
+                              
                               $sms_from = $sms['sms_from'];
                               $sms_to = $sms['sms_to'];
                               $sms_message = $sms['sms_message'];
@@ -208,7 +233,7 @@
                               <td>$sms_from</td>
                               <td>$carrier_status</td>
                               <td>-$sender_cost</td>
-                              <td></td>
+                              <td>$formatted_time</td>
                               
                             </tr>";
                             }
