@@ -69,10 +69,13 @@ function handleSuccessfulVerification($userId, $identityId) {
                     // CURL für den Download verwenden
                     $ch = curl_init();
                     curl_setopt_array($ch, [
-                        CURLOPT_URL => $frontImage->links->data[0]->url,
+                        CURLOPT_URL => $frontImage->url,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_SSL_VERIFYPEER => true
+                        CURLOPT_SSL_VERIFYPEER => true,
+                        CURLOPT_HTTPHEADER => [
+                            'Authorization: Bearer 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'
+                        ]
                     ]);
                     
                     $frontImageContent = curl_exec($ch);
@@ -107,10 +110,13 @@ function handleSuccessfulVerification($userId, $identityId) {
                     // CURL für den Download verwenden
                     $ch = curl_init();
                     curl_setopt_array($ch, [
-                        CURLOPT_URL => $backImage->links->data[0]->url,
+                        CURLOPT_URL => $backImage->url,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_FOLLOWLOCATION => true,
-                        CURLOPT_SSL_VERIFYPEER => true
+                        CURLOPT_SSL_VERIFYPEER => true,
+                        CURLOPT_HTTPHEADER => [
+                            'Authorization: Bearer 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'
+                        ]
                     ]);
                     
                     $backImageContent = curl_exec($ch);
