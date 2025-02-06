@@ -47,7 +47,7 @@ function handleSuccessfulVerification($userId) {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode(['verified' => true]),
+            CURLOPT_POSTFIELDS => json_encode(['verified' => "true"]),
             CURLOPT_HTTPHEADER => array(
                 'Accept: application/json',
                 'Content-Type: application/json',
