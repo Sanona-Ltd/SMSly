@@ -105,6 +105,13 @@ try {
         $_SESSION['sms-status'] = '0'; // Erfolg
         sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.success', 'The user has successfully sent a SMS');
         
+        // Berechne die Gesamtkosten basierend auf der Anzahl der SMS-Segmente
+        $totalCost = 0;
+        $messageCount = count($responseData['messages']);
+        foreach ($responseData['messages'] as $message) {
+            $totalCost += (float)($message['message-price'] ?? 0);
+        }
+
         // SMS in Datenbank loggen
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -128,7 +135,7 @@ try {
                 'sms_message_price' => $responseData['messages'][0]['message-price'] ?? '0',
                 'sms_tag' => $_GET['smstag'] ?? '',
                 'sender' => $_SESSION['user_id'],
-                'sender_cost' => $responseData['messages'][0]['message-price'] ?? '0',
+                'sender_cost' => $totalCost,        // Gesamtpreis aller Segmente
                 'sender_ip' => $visitor_ip,
                 'sender_system' => 'Webform | SMSly',
                 'sender_gateway' => $provider
