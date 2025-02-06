@@ -162,22 +162,22 @@
                           // Konvertiere die JSON-Antwort in ein PHP-Array
                           $data = json_decode($response, true);
 
-                          // Zeitumwandlungsfunktion - außerhalb der Schleife definieren
+                          // Time formatting function - define outside the loop
                           function formatTimeAgo($published_at) {
                               $timestamp = strtotime($published_at);
                               $now = time();
                               $diff = $now - $timestamp;
                               
                               if ($diff < 60) {
-                                  return "vor " . $diff . " Sekunden";
+                                  return $diff . " seconds ago";
                               } elseif ($diff < 3600) {
-                                  return "vor " . floor($diff/60) . " Minuten";
+                                  return floor($diff/60) . " minutes ago";
                               } elseif ($diff < 7200) {
-                                  return "vor einer Stunde";
+                                  return "1 hour ago";
                               } elseif ($diff < 86400) {
-                                  return "vor " . floor($diff/3600) . " Stunden";
-                              } elseif ($diff < 129600) { // 36 Stunden
-                                  return "gestern";
+                                  return floor($diff/3600) . " hours ago";
+                              } elseif ($diff < 129600) { // 36 hours
+                                  return "yesterday";
                               } else {
                                   return date("H:i d.m.Y", $timestamp);
                               }
