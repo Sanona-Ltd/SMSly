@@ -11,12 +11,16 @@ try {
         throw new Exception("Benutzer nicht angemeldet");
     }
 
-    // Erstellen einer neuen Verification Session
+    // Erstellen einer neuer Verification Session
     $session = $stripe->identity->verificationSessions->create([
         'type' => 'document',
         'metadata' => [
             'user_id' => $_SESSION["user_id"]
-        ]
+        ],
+        'return_url' => 'https://smsly.ch/v4/auth/stripe-identity-callback.php',
+        'success_url' => 'https://smsly.ch/v4/', // Optional
+        'failure_url' => 'https://smsly.ch/v4/'    // Optional
+
     ]);
 
     // Weiterleitung zur Stripe Verification URL
