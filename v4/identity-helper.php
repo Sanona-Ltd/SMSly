@@ -75,10 +75,13 @@
 
                     <div class="row">
                         <div class="col-12 text-center">
-                            <div id="status" class="mb-3">Verifizierung wird überprüft...</div>
+                            <div id="status" class="mb-3">Verifizierung wird überprüft... (<span id="countdown">15</span>)</div>
                             <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
                                 <span class="visually-hidden">Lädt...</span>
                             </div>
+                            <button id="continueButton" class="btn btn-primary mt-3" style="display: none;" onclick="window.location.href='/v4/'">
+                                Fortfahren
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -98,6 +101,26 @@
         <script src="./assets/js/theme.js"></script>
         
         <script>
+        let timeLeft = 15;
+        const countdownElement = document.getElementById('countdown');
+        const continueButton = document.getElementById('continueButton');
+        const spinnerElement = document.querySelector('.spinner-border');
+        const statusElement = document.getElementById('status');
+
+        function updateCountdown() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                countdownElement.textContent = timeLeft;
+            } else {
+                clearInterval(countdownInterval);
+                spinnerElement.style.display = 'none';
+                statusElement.innerHTML = 'Überprüfung abgeschlossen!';
+                continueButton.style.display = 'inline-block';
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+
         function checkVerification() {
             fetch('auth/check-verification.php')
                 .then(response => response.json())

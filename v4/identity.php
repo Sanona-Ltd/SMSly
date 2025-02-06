@@ -76,8 +76,8 @@
                     <div class="row">
                         <div class="col-12 text-center">
 
-                            <a href="auth/stripe-identity.php" id="verificationButton" class="btn btn-primary fw-bolder rounded-2 py-6 w-100 text-capitalize disabled">
-                                Start Verification (<span id="countdown">15</span>s)
+                            <a href="auth/stripe-identity.php" class="btn btn-primary fw-bolder rounded-2 py-6 w-100 text-capitalize">
+                                Start Verification
                             </a>
                         </div>
                     </div>
@@ -97,28 +97,6 @@
 
         <script src="./assets/js/sidebarmenu.js"></script>
         <script src="./assets/js/theme.js"></script>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const button = document.getElementById('verificationButton');
-                const countdownDisplay = document.getElementById('countdown');
-                let timeLeft = 15;
-                
-                button.disabled = true;
-                
-                const countdown = setInterval(function() {
-                    timeLeft--;
-                    countdownDisplay.textContent = timeLeft;
-                    
-                    if (timeLeft <= 0) {
-                        clearInterval(countdown);
-                        button.disabled = false;
-                        button.classList.remove('disabled');
-                        button.innerHTML = 'Start Verification';
-                    }
-                }, 1000);
-            });
-        </script>
 </body>
 
 </html>
