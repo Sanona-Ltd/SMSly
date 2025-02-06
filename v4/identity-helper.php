@@ -79,12 +79,18 @@
                             <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
                                 <span class="visually-hidden">Lädt...</span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div class="col-8">
                             <div class="mt-4">
                                 <a href="auth/stripe-identity.php" id="verifyButton" class="btn btn-primary fw-bolder rounded-2 py-6 w-100 text-capitalize" disabled>
                                     Start Verification (<span id="timer">15</span>s)
                                 </a>
                             </div>
                         </div>
+                        <div class="col-2"></div>
                     </div>
                 </div>
             </div>
