@@ -17,7 +17,7 @@ try {
         'metadata' => [
             'user_id' => $_SESSION["user_id"]
         ],
-        'return_url' => 'https://smsly.ch/v4/auth/stripe-identity-callback.php',
+        'return_url' => 'https://smsly.ch/v4/identity-helper',
         'options' => [
             'document' => [
                 'allowed_types' => ['id_card', 'passport'],

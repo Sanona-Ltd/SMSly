@@ -1,5 +1,4 @@
 <?php require_once("auth/login-checker.php"); ?>
-<?php header('Content-Type: text/html; charset=utf-8'); ?>
 
 
 <!DOCTYPE html>
@@ -67,18 +66,11 @@
 
                     <div class="row justify-content-center">
                         <div class="col-lg-6 text-center">
-                            <h2 class="fw-bolder mb-0 fs-8 lh-base">We will check the information you provide.</h2>
-                        </div>
-                    </div>
-                    </br>
-                    </br>
-
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            <div id="status" class="mb-3">Verifizierung wird überprüft...</div>
-                            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
-                                <span class="visually-hidden">Lädt...</span>
+                            <div class="mb-4">
+                                <i class="ti ti-check-circle text-success" style="font-size: 5rem;"></i>
                             </div>
+                            <h2 class="fw-bolder mb-3 fs-8 lh-base">Your account has been successfully verified!</h2>
+                            <p class="text-muted fs-4">You can now use your account without restrictions. Enjoy our services!</p>
                         </div>
                     </div>
                 </div>
@@ -96,22 +88,6 @@
 
         <script src="./assets/js/sidebarmenu.js"></script>
         <script src="./assets/js/theme.js"></script>
-        
-        <script>
-        function checkVerification() {
-            fetch('auth/check-verification.php')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0 && data[0].verified === "true") {
-                        window.location.href = '/v4/';
-                    }
-                })
-                .catch(error => console.error('Fehler:', error));
-        }
-
-        // Prüfe alle 3 Sekunden
-        setInterval(checkVerification, 3000);
-        </script>
 </body>
 
 </html>
