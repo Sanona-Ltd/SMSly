@@ -112,21 +112,9 @@
               </div>
             </div>
 
-            <!-- Modulare Komponenten -->
-            <div id="sms-send-container"></div>
-            <div id="payments-container"></div>
-
-            <script>
-              $(document).ready(function() {
-                $('#sms-send-container').load('module/sms-send-index.php');
-                $('#payments-container').load('module/payments-index.php');
-              });
-            </script>
+            <?php include("module/sms-send-index.php"); ?>
+            <?php include("module/payments-index.php"); ?>
             
-            <!-- Entferne die direkten PHP includes -->
-            <?php /* include("module/sms-send-index.php"); */ ?>
-            <?php /* include("module/payments-index.php"); */ ?>
-
           </div>
 
           <div class="d-flex border-bottom title-part-padding px-0 mb-3 align-items-center">
