@@ -105,13 +105,6 @@ try {
         $_SESSION['sms-status'] = '0'; // Erfolg
         sendLogAsync('sms.sending', $GLOBALS_USER_ID, 'sending.success', 'The user has successfully sent a SMS');
         
-        // Berechne die Gesamtkosten basierend auf der Anzahl der SMS-Segmente
-        $totalCost = 0;
-        $messageCount = count($responseData['messages']);
-        foreach ($responseData['messages'] as $message) {
-            $totalCost += (float)($message['message-price'] ?? 0);
-        }
-
         // SMS in Datenbank loggen
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -135,7 +128,7 @@ try {
                 'sms_message_price' => $responseData['messages'][0]['message-price'] ?? '0',
                 'sms_tag' => $_GET['smstag'] ?? '',
                 'sender' => $_SESSION['user_id'],
-                'sender_cost' => $totalCost,        // Gesamtpreis aller Segmente
+                'sender_cost' => $responseData['message-count'] ?? '1',  // Anzahl der SMS-Segmente
                 'sender_ip' => $visitor_ip,
                 'sender_system' => 'Webform | SMSly',
                 'sender_gateway' => $provider
@@ -145,6 +138,29 @@ try {
                 'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
             ),
         ));
+
+        // SMS Kontingent minus rechnen
+        $newContingent = $GLOBALS_USER_SMSCONTINGENT - ($responseData['message-count'] ?? 1);
+        
+        $curlContingent = curl_init();
+        curl_setopt_array($curlContingent, array(
+            CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user/update/' . $GLOBALS_USER_ID,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array('sms_contingent' => $newContingent),
+            CURLOPT_HTTPHEADER => array(
+                'Accept: application/json',
+                'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+            ),
+        ));
+
+        $contingentResponse = curl_exec($curlContingent);
+        curl_close($curlContingent);
 
         $dbResponse = curl_exec($curl);
         curl_close($curl);
