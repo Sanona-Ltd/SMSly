@@ -42,13 +42,16 @@ function handleSuccessfulVerification($userId, $identityId) {
         \Stripe\Stripe::setApiKey("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");
 
         // Bilder von Stripe herunterladen
-        $verificationSession = \Stripe\Identity\VerificationSession::retrieve(
-            $identityId,
+        $verificationSession = \Stripe\Identity\VerificationSession::retrieve($identityId);
+        
+        // Verification Report abrufen
+        $verificationReport = \Stripe\Identity\VerificationReport::retrieve(
+            $verificationSession->last_verification_report,
             ['expand' => ['document.front', 'document.back', 'selfie']]
         );
         
         // Debug-Ausgabe
-        error_log("Verification Session Daten: " . print_r($verificationSession, true));
+        error_log("Verification Report Daten: " . print_r($verificationReport, true));
 
         // Erstelle den Ordner für die Bilder
         $userDirectory = __DIR__ . '/../secure/' . $userId;
@@ -57,10 +60,10 @@ function handleSuccessfulVerification($userId, $identityId) {
         }
 
         // Lade die Dokumentbilder herunter
-        if (isset($verificationSession->document) && isset($verificationSession->document->front)) {
-            error_log("Front document data: " . print_r($verificationSession->document->front, true));
+        if (isset($verificationReport->document) && isset($verificationReport->document->front->file->id)) {
+            error_log("Front document file ID: " . $verificationReport->document->front->file->id);
             try {
-                $frontImage = \Stripe\File::retrieve($verificationSession->document->front->id);
+                $frontImage = \Stripe\File::retrieve($verificationReport->document->front->file->id);
                 $frontImageContent = file_get_contents($frontImage->url);
                 if ($frontImageContent === false) {
                     throw new Exception("Konnte Vorderseite nicht herunterladen");
@@ -75,10 +78,10 @@ function handleSuccessfulVerification($userId, $identityId) {
             }
         }
 
-        if (isset($verificationSession->document) && isset($verificationSession->document->back)) {
-            error_log("Back document data: " . print_r($verificationSession->document->back, true));
+        if (isset($verificationReport->document) && isset($verificationReport->document->back->file->id)) {
+            error_log("Back document file ID: " . $verificationReport->document->back->file->id);
             try {
-                $backImage = \Stripe\File::retrieve($verificationSession->document->back->id);
+                $backImage = \Stripe\File::retrieve($verificationReport->document->back->file->id);
                 $backImageContent = file_get_contents($backImage->url);
                 if ($backImageContent === false) {
                     throw new Exception("Konnte Rückseite nicht herunterladen");
@@ -93,10 +96,10 @@ function handleSuccessfulVerification($userId, $identityId) {
             }
         }
 
-        if (isset($verificationSession->selfie)) {
-            error_log("Selfie data: " . print_r($verificationSession->selfie, true));
+        if (isset($verificationReport->selfie) && isset($verificationReport->selfie->file->id)) {
+            error_log("Selfie file ID: " . $verificationReport->selfie->file->id);
             try {
-                $selfieImage = \Stripe\File::retrieve($verificationSession->selfie->id);
+                $selfieImage = \Stripe\File::retrieve($verificationReport->selfie->file->id);
                 $selfieImageContent = file_get_contents($selfieImage->url);
                 if ($selfieImageContent === false) {
                     throw new Exception("Konnte Selfie nicht herunterladen");
