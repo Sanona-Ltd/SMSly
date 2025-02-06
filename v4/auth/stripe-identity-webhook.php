@@ -37,15 +37,15 @@ if ($event && isset($event['data']['object']) && $event['data']['object']['objec
  */
 function handleSuccessfulVerification($userId, $identityId) {
     try {
-        // Stripe API Key laden
-        require_once(__DIR__ . '../vendor/autoload.php');
+        // Stripe API Key laden - Pfad korrigiert
+        require_once(__DIR__ . '/../vendor/autoload.php');
         \Stripe\Stripe::setApiKey("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");
 
         // Bilder von Stripe herunterladen
         $verificationSession = \Stripe\Identity\VerificationSession::retrieve($identityId);
         
         // Erstelle den Ordner für die Bilder
-        $userDirectory = __DIR__ . '/secure/' . $userId;
+        $userDirectory = __DIR__ . '/../secure/' . $userId;
         if (!file_exists($userDirectory)) {
             mkdir($userDirectory, 0755, true);
         }
