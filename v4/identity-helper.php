@@ -75,13 +75,15 @@
 
                     <div class="row">
                         <div class="col-12 text-center">
-                            <div id="status" class="mb-3">Verifizierung wird überprüft... (<span id="countdown">15</span>)</div>
+                            <div id="status" class="mb-3">Verifizierung wird überprüft...</div>
                             <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
                                 <span class="visually-hidden">Lädt...</span>
                             </div>
-                            <button id="continueButton" class="btn btn-primary mt-3" style="display: none;" onclick="window.location.href='/v4/'">
-                                Fortfahren
-                            </button>
+                            <div class="mt-4">
+                                <a href="auth/stripe-identity.php" id="verifyButton" class="btn btn-primary fw-bolder rounded-2 py-6 w-100 text-capitalize" disabled>
+                                    Start Verification (<span id="timer">15</span>s)
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -101,26 +103,6 @@
         <script src="./assets/js/theme.js"></script>
         
         <script>
-        let timeLeft = 15;
-        const countdownElement = document.getElementById('countdown');
-        const continueButton = document.getElementById('continueButton');
-        const spinnerElement = document.querySelector('.spinner-border');
-        const statusElement = document.getElementById('status');
-
-        function updateCountdown() {
-            if (timeLeft > 0) {
-                timeLeft--;
-                countdownElement.textContent = timeLeft;
-            } else {
-                clearInterval(countdownInterval);
-                spinnerElement.style.display = 'none';
-                statusElement.innerHTML = 'Überprüfung abgeschlossen!';
-                continueButton.style.display = 'inline-block';
-            }
-        }
-
-        const countdownInterval = setInterval(updateCountdown, 1000);
-
         function checkVerification() {
             fetch('auth/check-verification.php')
                 .then(response => response.json())
@@ -131,6 +113,22 @@
                 })
                 .catch(error => console.error('Fehler:', error));
         }
+
+        // Timer-Funktionalität
+        let timeLeft = 15;
+        const timerElement = document.getElementById('timer');
+        const verifyButton = document.getElementById('verifyButton');
+
+        const timer = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                verifyButton.removeAttribute('disabled');
+                verifyButton.textContent = 'Start Verification';
+            }
+        }, 1000);
 
         // Prüfe alle 3 Sekunden
         setInterval(checkVerification, 3000);
