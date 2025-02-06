@@ -39,13 +39,13 @@ function handleSuccessfulVerification($userId, $identityId) {
     try {
         // Stripe API Key laden
         require_once(__DIR__ . '../vendor/autoload.php');
-        \Stripe\Stripe::setApiKey(STRIPE_SECRET_KEY);
+        \Stripe\Stripe::setApiKey("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");
 
         // Bilder von Stripe herunterladen
         $verificationSession = \Stripe\Identity\VerificationSession::retrieve($identityId);
         
         // Erstelle den Ordner für die Bilder
-        $userDirectory = __DIR__ . '/../secure/' . $userId;
+        $userDirectory = __DIR__ . '/secure/' . $userId;
         if (!file_exists($userDirectory)) {
             mkdir($userDirectory, 0755, true);
         }
@@ -82,7 +82,7 @@ function handleSuccessfulVerification($userId, $identityId) {
         }
 
         error_log("Identitätsbilder erfolgreich gespeichert für User ID: " . $userId);
-
+        echo "Identitätsbilder erfolgreich gespeichert für User ID: " . $userId;
         // API-Aufruf an Sanona
         $curl = curl_init();
         $apiEndpoint = "https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user/update/" . $userId;
@@ -125,8 +125,10 @@ function handleSuccessfulVerification($userId, $identityId) {
         echo "Verifizierung erfolgreich aktualisiert für User ID: " . $userId;
     } catch (Exception $e) {
         error_log("Fehler beim Herunterladen der Identitätsbilder: " . $e->getMessage());
+        echo "Fehler beim Herunterladen der Identitätsbilder: " . $e->getMessage();
         // Weitermachen mit dem API-Aufruf, auch wenn das Bildherunterladen fehlschlägt
     }
+
 
     try {
         // API-Aufruf an Sanona
