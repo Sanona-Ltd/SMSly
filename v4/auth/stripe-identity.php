@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 // Stripe API-Key (Ersetzen Sie dies mit Ihrem tatsächlichen Secret Key)
 $stripe = new \Stripe\StripeClient('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');
