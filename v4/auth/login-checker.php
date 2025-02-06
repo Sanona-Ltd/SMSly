@@ -83,6 +83,28 @@ if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) {
         $GLOBALS_USER_VERIFIED = $_SESSION["verified"];
         $GLOBALS_USER_API_KEY = $_SESSION["api_key"];
         $GLOBALS_USER_API_SECRET = $_SESSION["api_secret"];
+
+        // Überprüfung des Verifizierungsstatus und erlaubte Seiten
+        if ($GLOBALS_USER_VERIFIED === false) {
+            $current_path = $_SERVER['REQUEST_URI'];
+            $allowed_pages = array(
+                '/v4/identity',
+                '/v4/identity-helper'
+            );
+            
+            $is_allowed = false;
+            foreach ($allowed_pages as $page) {
+                if (strpos($current_path, $page) !== false) {
+                    $is_allowed = true;
+                    break;
+                }
+            }
+            
+            if (!$is_allowed) {
+                header("Location: /v4/identity");
+                exit;
+            }
+        }
     }
 } else {
     // Benutzer ist nicht angemeldet
