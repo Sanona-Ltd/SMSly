@@ -85,7 +85,7 @@ if (isset($_SESSION["user_id"]) && !empty($_SESSION["user_id"])) {
         $GLOBALS_USER_API_SECRET = $_SESSION["api_secret"];
 
         // Überprüfung des Verifizierungsstatus und erlaubte Seiten
-        if ($GLOBALS_USER_VERIFIED === false) {
+        if ($GLOBALS_USER_VERIFIED === "false") {
             $current_path = $_SERVER['REQUEST_URI'];
             $allowed_pages = array(
                 '/v4/identity',
