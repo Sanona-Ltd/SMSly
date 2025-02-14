@@ -2,6 +2,14 @@
 session_start(); 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Turnstile Überprüfung
+    $token = $_POST['cf-turnstile-response'];
+    if (!$token) {
+        $_SESSION["errorText"] = "Bitte bestätigen Sie, dass Sie kein Roboter sind.";
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+    }
+
     $first_name = $_POST['FIRST_NAME'];
     $last_name = $_POST['LAST_NAME'];
     $email = $_POST['EMAIL'];
@@ -54,6 +62,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
   <!-- Core Css -->
   <link rel="stylesheet" href="./assets/css/styles.css" />
+
+  <!-- Turnstile -->
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <!-- Analytics -->
   <?php include("app/analytics.php"); ?>
@@ -119,6 +130,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="exampleInputEmail1" class="form-label">E-Mail Adresse</label>
                     <input type="email" name="EMAIL" class="form-control" id="exampleInputEmail1" required>
                   </div>
+                  
+                  <div class="mb-3 d-flex justify-content-center">
+                    <div class="cf-turnstile" data-sitekey="0x4AAAAAAAPn8Fvb0qUiLF9W"></div>
+                  </div>
+
                   <input type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2" value="Für Beta-Version voranmelden">
                   <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-medium">Sie haben bereits ein Konto?</p>
