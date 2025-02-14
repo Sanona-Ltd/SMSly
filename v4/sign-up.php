@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <label for="exampleInputEmail1" class="form-label">E-Mail Adresse</label>
                     <input type="email" name="EMAIL" class="form-control" id="exampleInputEmail1" required>
                   </div>
-                  <input type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2" value="Registrieren">
+                  <input type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2" value="Für Beta-Version voranmelden">
                   <div class="d-flex align-items-center justify-content-center">
                     <p class="fs-4 mb-0 fw-medium">Sie haben bereits ein Konto?</p>
                     <a class="text-primary fw-medium ms-2" href="./sign-in">Anmelden</a>
