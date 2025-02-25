@@ -1,5 +1,4 @@
-<?php session_start(); ?>
-<?php include("../v4/auth-app/is-login.php"); ?>
+<?php require_once("auth/login-checker.php"); ?>
 
 
 <!DOCTYPE html>
@@ -105,7 +104,7 @@
                           curl_setopt_array(
                             $curl,
                             array(
-                              CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-sender-name?whereRelation[user][email]=florin.schildknecht%40sanona.org&timestamps=null',
+                              CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-sender-name?whereRelation[user][email]=' . $GLOBALS_USER_EMAIL . '&timestamps=null',
                               CURLOPT_RETURNTRANSFER => true,
                               CURLOPT_ENCODING => '',
                               CURLOPT_MAXREDIRS => 10,
@@ -180,7 +179,7 @@
 
 
                                                   </textarea>
-                                                <small id="textHelp" class="form-text text-muted">If you wish to make an objection, please send us an mail with the subject "Sender name #'. $id . '"</small>
+                                                <small id="textHelp" class="form-text text-muted">If you wish to make an objection, please send us an mail with the subject "Sender name #' . $id . '"</small>
                                               </div>
                                             </div>
                                           </div>
@@ -237,7 +236,7 @@
                         </tfoot>
                       </table>
                       <script>
-                        $(document).ready(function () {
+                        $(document).ready(function() {
                           $('#SMSHistory').DataTable({
                             "order": [
                               [0, "desc"] // Sortiert die ID-Spalte (erste Spalte) absteigend

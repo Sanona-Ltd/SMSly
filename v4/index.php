@@ -93,7 +93,7 @@
                       <span class="fs-2 mt-1 ">current balance</span>
                     </div>
                   </div>
-
+                            
                 </div>
               </div>
             </div>
