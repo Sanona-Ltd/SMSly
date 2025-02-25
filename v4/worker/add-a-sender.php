@@ -43,7 +43,14 @@ curl_setopt_array($curl, array(
     CURLOPT_FOLLOWLOCATION => true,
     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
     CURLOPT_CUSTOMREQUEST => 'POST',
-    CURLOPT_POSTFIELDS => array('name' => 'SMSly | Action', 'website_id' => '8', 'subscriber_id' => '26', 'title' => 'SMSly - Neuer Absender', 'description' => 'Jemand will einen Neuen Absender nutzen', 'urgency' => 'high', 'url' => 'https://pager.sanona.org/?cmd=action&title=SMSly%20%7C%20Neuer%20Absender&content=Der%20Benutzer%20%22' . $GLOBALS_USER_EMAIL . '%22%20will%20den%20Absender%20%22' . $senderName . '%22%20nutzen.%20Seine%20Begr%C3%BCndung%20ist%3A%20' . $senderDescription . '&url1=https%3A%2F%2Fsanona.org%2Fpush%2Fapp%2Faction-dummy.php&url1text=NOT%20WORKING&url2=https%3A%2F%2Fsanona.org%2Fpush%2Fapp%2Faction-dummy.php&url2text=NOT%20WORKING', 'send' => ''),
+    CURLOPT_POSTFIELDS => array('name' => 'SMSly | Action', 
+        'website_id' => '8', 
+        'subscriber_id' => '26', 
+        'title' => 'SMSly - Neuer Absender', 
+        'description' => 'Jemand will einen Neuen Absender nutzen', 
+        'urgency' => 'high', 
+        'url' => 'https://pager.sanona.org/?cmd=action&title=SMSly%20%7C%20Neuer%20Absender&content=Der%20Benutzer%20%22' . urlencode($GLOBALS_USER_EMAIL) . '%22%20will%20den%20Absender%20%22' . urlencode($senderName) . '%22%20nutzen.%20Seine%20Begr%C3%BCndung%20ist%3A%20' . urlencode($senderDescription) . '&url1=https%3A%2F%2Fsanona.org%2Fpush%2Fapp%2Faction-dummy.php&url1text=NOT%20WORKING&url2=https%3A%2F%2Fsanona.org%2Fpush%2Fapp%2Faction-dummy.php&url2text=NOT%20WORKING',
+        'send' => ''),
     CURLOPT_HTTPHEADER => array(
         'Authorization: Bearer 59fc371e44a8124c7d0829aa414ad138',
         'Cookie: PHPSESSID=p9bsm7douq8qgkklbt4qe8o3qn'
