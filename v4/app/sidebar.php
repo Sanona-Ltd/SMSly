@@ -125,14 +125,14 @@
           <span class="hide-menu">Developer</span>
         </li>
         <li class="sidebar-item">
-          <a class="sidebar-link justify-content-between" href="./api" aria-expanded="false">
+          <a class="sidebar-link justify-content-between" href="#" aria-expanded="false">
             <div class="d-flex align-items-center gap-3">
               <span class="d-flex">
                 <i class="ti ti-code-circle-2"></i>
               </span>
               <span class="hide-menu">API</span>
             </div>
-            <span class="hide-menu badge rounded-pill border border-dark text-dark fs-2 py-1 px-2">NEW</span>
+            <span class="hide-menu badge rounded-pill border border-dark text-dark fs-2 py-1 px-2">SOON</span>
           </a>
         </li>
 
