@@ -298,11 +298,12 @@
           <form action="worker/add-a-sender.php" method="POST">
             <div class="mb-3">
               <label for="senderName" class="form-label">Sender name</label>
-              <input type="text" class="form-control" id="senderName" name="senderName" required>
+              <input type="text" class="form-control" id="senderName" name="senderName" maxlength="11" required>
+              <small class="form-text text-muted">The sender name must not be longer than 11 characters.</small>
             </div>
             <div class="mb-3">
               <label for="senderDescription" class="form-label">Why do you want to use this sender name?</label>
-              <textarea class="form-control" id="senderDescription" name="senderDescription" rows="4" 
+              <textarea class="form-control" id="senderDescription" name="senderDescription" rows="4"
                 placeholder="Please explain the purpose of this sender name (e.g. marketing campaigns, customer service, notifications, etc.)" required></textarea>
               <small class="form-text text-muted">A detailed description helps us to process your request faster.</small>
             </div>
