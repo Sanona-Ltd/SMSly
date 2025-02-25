@@ -77,6 +77,9 @@
                     <div class="mb-2">
                       <h5 class="card-title">
                         SMS Sender Names
+                        <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addSenderModal">
+                          Neuen Absender hinzufügen
+                        </button>
                       </h5>
                     </div>
                     <div class="table-responsive">
@@ -275,6 +278,34 @@
 
   <script src="./assets/libs/datatables.net/js/jquery.dataTables.min.js"></script>
   <script src="./assets/js/datatable/datatable-api.init.js"></script>
+
+  <!-- Modal zum Hinzufügen eines neuen Absenders -->
+  <div class="modal fade" id="addSenderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Neuen Absender hinzufügen</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="worker/add-a-sender.php" method="POST">
+            <div class="mb-3">
+              <label for="senderName" class="form-label">Absendername</label>
+              <input type="text" class="form-control" id="senderName" name="senderName" required>
+            </div>
+            <div class="mb-3">
+              <label for="senderDescription" class="form-label">Beschreibung</label>
+              <textarea class="form-control" id="senderDescription" name="senderDescription" rows="4" required></textarea>
+            </div>
+            <div class="text-end">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+              <button type="submit" class="btn btn-primary">Absender hinzufügen</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>
