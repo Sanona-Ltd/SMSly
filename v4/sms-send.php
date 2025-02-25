@@ -139,7 +139,16 @@
                           curl_close($curl);
                           $senderNames = json_decode($response, true);
                           
-                          if ($GLOBALS_USER_OWNSENDER === 'Yes') {
+                          if (empty($senderNames)) {
+                            // Wenn keine Absender vorhanden sind, zeige Platzhalter und trigger Modal
+                            echo '<input type="text" class="form-control" name="smsfrom" id="smsfrom" placeholder="No sender names available" disabled />';
+                            echo '<script>
+                                  document.addEventListener("DOMContentLoaded", (event) => {
+                                    const modalElement = new bootstrap.Modal(document.getElementById("no-sender-alert"));
+                                    modalElement.show();
+                                  });
+                                </script>';
+                          } else if ($GLOBALS_USER_OWNSENDER === 'Yes') {
                             // Freie Eingabe erlauben
                             echo '<input type="text" class="form-control" name="smsfrom" id="smsfrom" placeholder="name@example.com" />';
                           } else {
@@ -272,6 +281,33 @@
         </div>
       </div>
       <!-- /.modal-content -->
+    </div>
+  </div>
+
+  <!-- No Sender Names Modal -->
+  <div class="modal fade" id="no-sender-alert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content modal-filled bg-light-warning">
+        <div class="modal-body p-4">
+          <div class="text-center text-warning">
+            <i class="ti ti-alert-octagon fs-7"></i>
+            <h4 class="mt-2">Keine SMS-Absender verfügbar!</h4>
+            <p class="mt-3">
+              Für diesen Account existieren keine SMS-Absender. 
+              Bitte tragen Sie zuerst einen Absender ein, 
+              bevor Sie SMS versenden können.
+            </p>
+            <div class="mt-4">
+              <a href="index" class="btn btn-light me-2">
+                Zur Startseite
+              </a>
+              <a href="sms-sender" class="btn btn-warning">
+                SMS-Absender erstellen
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
