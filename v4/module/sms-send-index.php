@@ -27,7 +27,7 @@
                             $curl = curl_init();
 
                             curl_setopt_array($curl, array(
-                                CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-send?sort=created_at%3ADESC&limit=5&timestamps',
+                                CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-send?whereRelation[sender][email]=' . $GLOBALS_USER_EMAIL . '&sort=created_at%3ADESC&limit=5&timestamps=null',
                                 CURLOPT_RETURNTRANSFER => true,
                                 CURLOPT_ENCODING => '',
                                 CURLOPT_MAXREDIRS => 10,
