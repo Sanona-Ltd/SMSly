@@ -1,5 +1,7 @@
 <?php
 session_start();
+require 'vendor/autoload.php';
+use Ramsey\Uuid\Uuid;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Turnstile Überprüfung
@@ -13,18 +15,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['EMAIL'];
     $password = $_POST['PASSWORD'];
 
-    // UUID v7 generieren
-    $uuid = sprintf(
-        '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0x0fff) | 0x7000,
-        mt_rand(0, 0x3fff) | 0x8000,
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff),
-        mt_rand(0, 0xffff)
-    );
+    // UUID v7 generieren mit der Bibliothek
+    $uuid = Uuid::uuid7()->toString();
 
     $curl = curl_init();
 
