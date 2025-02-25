@@ -1,49 +1,68 @@
-<?php 
-session_start(); 
+<?php
+session_start();
+require 'vendor/autoload.php';
+
+use Ramsey\Uuid\Uuid;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Turnstile Überprüfung
-    $token = $_POST['cf-turnstile-response'];
-    if (!$token) {
-        $_SESSION["errorText"] = "Bitte bestätigen Sie, dass Sie kein Roboter sind.";
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
-    }
-
-    $first_name = $_POST['FIRST_NAME'];
-    $last_name = $_POST['LAST_NAME'];
-    $email = $_POST['EMAIL'];
-
-    $curl = curl_init();
-
-    curl_setopt_array($curl, [
-        CURLOPT_URL => 'https://mailing.sanona.org/api/v1/public/subscribers',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_POST => true,
-        CURLOPT_POSTFIELDS => http_build_query([
-            'list_uid' => '67afcaaca4bbd',
-            'EMAIL' => $email,
-            'FIRST_NAME' => $first_name,
-            'LAST_NAME' => $last_name
-        ]),
-        CURLOPT_HTTPHEADER => [
-            'accept: application/json'
-        ]
-    ]);
-
-    $response = curl_exec($curl);
-    $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-    
-    curl_close($curl);
-
-    if ($http_code == 200 || $http_code == 201) {
-        $_SESSION["successText"] = "Vielen Dank für Ihre Registrierung! Wir werden Sie benachrichtigen, sobald SMSly.ch verfügbar ist.";
-    } else {
-        $_SESSION["errorText"] = "Es gab einen Fehler bei der Registrierung. Bitte versuchen Sie es später erneut.";
-    }
-    
+  // Turnstile Überprüfung
+  $token = $_POST['cf-turnstile-response'];
+  if (!$token) {
+    $_SESSION["errorText"] = "Bitte bestätigen Sie, dass Sie kein Roboter sind.";
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
+  }
+
+  $email = $_POST['EMAIL'];
+  $password = $_POST['PASSWORD'];
+
+  // UUID v7 generieren mit der Bibliothek
+  $uuid = Uuid::uuid7()->toString();
+
+  $curl = curl_init();
+
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_POSTFIELDS => array(
+      'email' => $email,
+      'password' => $password,
+      'name' => '',
+      'surname' => '',
+      'street' => '',
+      'number' => '',
+      'address-suffix' => '',
+      'zip-code' => '',
+      'city' => '',
+      'country' => 'Switzerland',
+      'can-login' => 'Registration',
+      'sms_contingent' => '10',
+      'own-sender' => 'No',
+      'rank' => 'Customer',
+      'verified' => 'false',
+      'stripe_identity' => '',
+      'api_key' => '',
+      'api_secret' => '',
+      'registration-key' => $uuid
+    ),
+    CURLOPT_HTTPHEADER => array(
+      'Accept: application/json',
+      'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+    ),
+  ));
+
+  $response = curl_exec($curl);
+  curl_close($curl);
+
+  // Nach erfolgreicher Registrierung zur Detailseite weiterleiten
+  header("Location: sign-up-details.php?key=" . $uuid);
+  exit();
 }
 ?>
 
@@ -103,42 +122,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <?php
                 if (isset($_SESSION["successText"])) {
-                    $successText = $_SESSION["successText"];
-                    echo "<div class='alert alert-light-success bg-success-subtle text-success' role='alert'>
-                            <h4 class='alert-heading'>Erfolg!</h4>
+                  $successText = $_SESSION["successText"];
+                  echo "<div class='alert alert-light-success bg-success-subtle text-success' role='alert'>
+                            <h4 class='alert-heading'>Success!</h4>
                             <p>$successText</p>
                           </div>";
-                    unset($_SESSION["successText"]);
+                  unset($_SESSION["successText"]);
                 }
                 ?>
 
                 <div class='alert alert-light-info bg-info-subtle bg-info-subtle text-info' role='alert'>
                   <h4 class='alert-heading'>Beta Version</h4>
-                  <p>Aktuell ist ist SMSly.ch nur in der Beta Version verfügbar. Wir arbeiten daran, dass Sie bald wieder auf Ihre SMSly.ch zugreifen können. Trage deine Email ein und wir werden dich benachrichtigen, sobald SMSly.ch wieder verfügbar ist.</p>
+                  <p>SMSly.ch is currently only available in beta version. Errors may occur. We appreciate your understanding.</p>
                 </div>
 
                 <form method="post" action="">
                   <div class="mb-3">
-                    <label for="firstName" class="form-label">Vorname</label>
-                    <input type="text" name="FIRST_NAME" class="form-control" id="firstName" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="lastName" class="form-label">Nachname</label>
-                    <input type="text" name="LAST_NAME" class="form-control" id="lastName" required>
-                  </div>
-                  <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">E-Mail Adresse</label>
+                    <label for="exampleInputEmail1" class="form-label">Email Address</label>
                     <input type="email" name="EMAIL" class="form-control" id="exampleInputEmail1" required>
                   </div>
-                  
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="PASSWORD" class="form-control" id="password" required>
+                  </div>
+
                   <div class="mb-3 d-flex justify-content-center">
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAAAPn8Fvb0qUiLF9W"></div>
                   </div>
 
-                  <input type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2" value="Für Beta-Version voranmelden">
+                  <input type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2" value="Pre-register for Beta Version">
                   <div class="d-flex align-items-center justify-content-center">
-                    <p class="fs-4 mb-0 fw-medium">Sie haben bereits ein Konto?</p>
-                    <a class="text-primary fw-medium ms-2" href="./sign-in">Anmelden</a>
+                    <p class="fs-4 mb-0 fw-medium">Already have an account?</p>
+                    <a class="text-primary fw-medium ms-2" href="./sign-in">Sign In</a>
                   </div>
                 </form>
               </div>
