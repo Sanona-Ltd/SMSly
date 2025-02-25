@@ -1,11 +1,48 @@
 <?php
 session_start();
 
+// Überprüfe ob der Registrierungsschlüssel vorhanden ist
+if (!isset($_GET['key'])) {
+    header("Location: sign-up.php");
+    exit();
+}
+
+// API-Anfrage um Benutzer anhand des Registrierungsschlüssels zu finden
+$curl = curl_init();
+
+curl_setopt_array($curl, array(
+    CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user?where[registration-key]=' . $_GET['key'],
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'GET',
+    CURLOPT_HTTPHEADER => array(
+        'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+    ),
+));
+
+$response = curl_exec($curl);
+curl_close($curl);
+
+$userData = json_decode($response, true);
+
+// Überprüfe ob Benutzer gefunden wurde
+if (empty($userData)) {
+    header("Location: sign-up.php");
+    exit();
+}
+
+// Setze die Update ID
+$updateID = $userData[0]['id'];
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
-        CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user',
+        CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user/update/' . $updateID,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_ENCODING => '',
         CURLOPT_MAXREDIRS => 10,
