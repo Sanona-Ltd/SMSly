@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $response = curl_exec($curl);
     curl_close($curl);
-    
+
     // Weiterleitung zur index.php nach erfolgreicher Registrierung
     header("Location: index.php");
     exit();
@@ -81,7 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <img src="./assets/images/logo.png" class="light-logo" alt="Logo-light" />
                                 </a>
 
-                                <form method="POST" action="">
+                                <form method="POST" action="" id="registrationForm" onsubmit="return validateAndFormatPhone()">
                                     <div class="d-flex flex-column gap-sm-7 gap-3">
                                         <div class="d-flex flex-sm-row flex-column gap-sm-7 gap-3">
                                             <div class="d-flex flex-column flex-grow-1 gap-2">
@@ -102,10 +102,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="d-flex flex-sm-row flex-column gap-sm-7 gap-3">
                                             <div class="d-flex flex-column flex-grow-1 gap-2">
                                                 <label for="phone" class="fs-3 fw-semibold text-dark">
-                                                    Phone Number *
+                                                    Phone Number * <small class="text-muted">(Format: 079 123 45 67 or +41 79 123 45 67)</small>
                                                 </label>
-                                                <input type="tel" name="phone" id="phone" placeholder="XXX XXX XXXX"
+                                                <input type="tel" name="phone" id="phone" placeholder="079 123 45 67"
                                                     class="form-control">
+                                                <div id="phoneError" class="text-danger" style="display: none;">
+                                                    Bitte geben Sie eine gültige Schweizer Telefonnummer ein.
+                                                </div>
                                             </div>
                                         </div>
                                         <hr>
@@ -168,6 +171,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <script src="./assets/js/sidebarmenu.js"></script>
     <script src="./assets/js/theme.js"></script>
+
+    <script>
+        function validateAndFormatPhone() {
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            let phoneNumber = phoneInput.value.replace(/\s+/g, ''); // Entfernt alle Leerzeichen
+
+            // Entfernt alle nicht-numerischen Zeichen außer +
+            phoneNumber = phoneNumber.replace(/[^\d+]/g, '');
+
+            // Entfernt + am Anfang, falls vorhanden
+            if (phoneNumber.startsWith('+')) {
+                phoneNumber = phoneNumber.substring(1);
+            }
+
+            // Wenn die Nummer mit 0 beginnt, ersetze sie durch 41
+            if (phoneNumber.startsWith('0')) {
+                phoneNumber = '41' + phoneNumber.substring(1);
+            }
+
+            // Fügt 41 hinzu, wenn es nicht vorhanden ist
+            if (!phoneNumber.startsWith('41')) {
+                phoneNumber = '41' + phoneNumber;
+            }
+
+            // Überprüft, ob die Nummer das richtige Format hat (41 + 9 Ziffern)
+            const phoneRegex = /^41\d{9}$/;
+            if (!phoneRegex.test(phoneNumber)) {
+                phoneError.style.display = 'block';
+                return false;
+            }
+
+            // Setzt die formatierte Nummer zurück ins Eingabefeld
+            phoneInput.value = phoneNumber;
+            phoneError.style.display = 'none';
+            return true;
+        }
+    </script>
 
 </body>
 
