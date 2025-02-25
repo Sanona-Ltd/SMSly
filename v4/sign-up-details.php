@@ -130,17 +130,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         </div>
                                         <div class="d-flex flex-sm-row flex-column gap-sm-7 gap-3">
                                             <div class="d-flex flex-column flex-grow-1 gap-2">
-                                                <label for="place" class="fs-3 fw-semibold text-dark">
-                                                    Place *
-                                                </label>
-                                                <input type="text" name="place" id="place" placeholder="Place"
-                                                    class="form-control" spellcheck="false" data-ms-editor="true">
-                                            </div>
-                                            <div class="d-flex flex-column flex-grow-1 gap-2">
                                                 <label for="zip_code" class="fs-3 fw-semibold text-dark">
                                                     Zip Code *
                                                 </label>
                                                 <input type="text" name="zip_code" id="zip_code" placeholder="Zip code"
+                                                    class="form-control" spellcheck="false" data-ms-editor="true">
+                                            </div>
+                                            <div class="d-flex flex-column flex-grow-1 gap-2">
+                                                <label for="place" class="fs-3 fw-semibold text-dark">
+                                                    Place *
+                                                </label>
+                                                <input type="text" name="place" id="place" placeholder="Place"
                                                     class="form-control" spellcheck="false" data-ms-editor="true">
                                             </div>
                                         </div>
