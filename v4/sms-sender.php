@@ -215,6 +215,9 @@
                                 <td>$formattedDate</td>
                                 <td>$ValidationRejectedButton</td>
                               </tr>";
+
+                              $popoutCode++;
+
                             }
                           } else {
                             echo "
