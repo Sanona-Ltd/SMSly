@@ -8,7 +8,7 @@
 
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/account-movements?whereRelation[relation][email]=' . $GLOBALS_USER_EMAIL,
+                    CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/account-movements?whereRelation[relation][email]=' . $GLOBALS_USER_EMAIL . '&timestamps',
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -26,6 +26,38 @@
                 
                 $movements = json_decode($response, true);
                 
+                function formatDateTime($published_at) {
+                    $timestamp = strtotime($published_at);
+                    $now = time();
+                    $diff = $now - $timestamp;
+                    
+                    if ($diff < 0) {
+                        // If date is in the future
+                        if ($diff > -300) { // less than 5 minutes
+                            return "Just now";
+                        } else if ($diff > -86400) { // less than 1 day
+                            return round(abs($diff) / 60) . " min ago";
+                        } else if ($diff > -432000) { // less than 5 days
+                            $days = round(abs($diff) / 86400);
+                            return $days . " day" . ($days > 1 ? "s" : "") . " ago";
+                        } else {
+                            return date("m/d/Y", $timestamp);
+                        }
+                    } else {
+                        // If date is in the past
+                        if ($diff < 300) { // less than 5 minutes
+                            return "Just now";
+                        } else if ($diff < 86400) { // less than 1 day
+                            return round($diff / 60) . " min ago";
+                        } else if ($diff < 432000) { // less than 5 days
+                            $days = round($diff / 86400);
+                            return $days . " day" . ($days > 1 ? "s" : "") . " ago";
+                        } else {
+                            return date("m/d/Y", $timestamp);
+                        }
+                    }
+                }
+                
                 foreach($movements as $movement) {
                 ?>
                     <div class="d-flex align-items-center justify-content-between mb-4">
@@ -35,7 +67,7 @@
                             </div>
                             <div>
                                 <h6 class="mb-1 fs-4 fw-semibold"><?php echo $movement['title']; ?></h6>
-                                <p class="fs-3 mb-0"><?php echo $movement['description']; ?></p>
+                                <p class="fs-3 mb-0"><?php echo formatDateTime($movement['published_at']); ?></p>
                             </div>
                         </div>
                         <h6 class="mb-0 fw-semibold"><?php echo ($movement['type'] === 'positive' ? '+' : '-') . $movement['quantity']; ?> Credits</h6>
