@@ -51,8 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => array(
-            'email' => $_SESSION['email'] ?? '',
-            'password' => $_SESSION['password'] ?? '',
             'name' => $_POST['Fname'] ?? '',
             'surname' => $_POST['Lname'] ?? '',
             'street' => $_POST['street'] ?? '',
