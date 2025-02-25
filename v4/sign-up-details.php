@@ -166,7 +166,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                                 <input type="tel" name="phone" id="phone" placeholder="079 123 45 67"
                                                     class="form-control">
                                                 <div id="phoneError" class="text-danger" style="display: none;">
-                                                    Bitte geben Sie eine gültige Schweizer Telefonnummer ein.
+                                                    Please enter a valid Swiss phone number.
                                                 </div>
                                             </div>
                                         </div>
@@ -235,34 +235,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         function validateAndFormatPhone() {
             const phoneInput = document.getElementById('phone');
             const phoneError = document.getElementById('phoneError');
-            let phoneNumber = phoneInput.value.replace(/\s+/g, ''); // Entfernt alle Leerzeichen
+            let phoneNumber = phoneInput.value.replace(/\s+/g, ''); // Remove all whitespace
 
-            // Entfernt alle nicht-numerischen Zeichen außer +
+            // Remove all non-numeric characters except +
             phoneNumber = phoneNumber.replace(/[^\d+]/g, '');
 
-            // Entfernt + am Anfang, falls vorhanden
+            // Remove + at the beginning if present
             if (phoneNumber.startsWith('+')) {
                 phoneNumber = phoneNumber.substring(1);
             }
 
-            // Wenn die Nummer mit 0 beginnt, ersetze sie durch 41
+            // If number starts with 0, replace with 41
             if (phoneNumber.startsWith('0')) {
                 phoneNumber = '41' + phoneNumber.substring(1);
             }
 
-            // Fügt 41 hinzu, wenn es nicht vorhanden ist
+            // Add 41 if not present
             if (!phoneNumber.startsWith('41')) {
                 phoneNumber = '41' + phoneNumber;
             }
 
-            // Überprüft, ob die Nummer das richtige Format hat (41 + 9 Ziffern)
+            // Check if number has correct format (41 + 9 digits)
             const phoneRegex = /^41\d{9}$/;
             if (!phoneRegex.test(phoneNumber)) {
                 phoneError.style.display = 'block';
                 return false;
             }
 
-            // Setzt die formatierte Nummer zurück ins Eingabefeld
+            // Set formatted number back to input field
             phoneInput.value = phoneNumber;
             phoneError.style.display = 'none';
             return true;

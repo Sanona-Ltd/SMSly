@@ -123,7 +123,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 if (isset($_SESSION["successText"])) {
                                     $successText = $_SESSION["successText"];
                                     echo "<div class='alert alert-light-success bg-success-subtle text-success' role='alert'>
-                            <h4 class='alert-heading'>Erfolg!</h4>
+                            <h4 class='alert-heading'>Success!</h4>
                             <p>$successText</p>
                           </div>";
                                     unset($_SESSION["successText"]);
@@ -132,16 +132,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 <div class='alert alert-light-info bg-info-subtle bg-info-subtle text-info' role='alert'>
                                     <h4 class='alert-heading'>Beta Version</h4>
-                                    <p>Aktuell ist ist SMSly.ch nur in der Beta Version verfügbar. Es können fehler auftreten. Wir bitten um Verständnis.</p>
+                                    <p>SMSly.ch is currently only available in beta version. Errors may occur. We appreciate your understanding.</p>
                                 </div>
 
                                 <form method="post" action="">
                                     <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">E-Mail Adresse</label>
+                                        <label for="exampleInputEmail1" class="form-label">Email Address</label>
                                         <input type="email" name="EMAIL" class="form-control" id="exampleInputEmail1" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="password" class="form-label">Passwort</label>
+                                        <label for="password" class="form-label">Password</label>
                                         <input type="password" name="PASSWORD" class="form-control" id="password" required>
                                     </div>
 
@@ -149,10 +149,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         <div class="cf-turnstile" data-sitekey="0x4AAAAAAAPn8Fvb0qUiLF9W"></div>
                                     </div>
 
-                                    <input type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2" value="Für Beta-Version voranmelden">
+                                    <input type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2" value="Pre-register for Beta Version">
                                     <div class="d-flex align-items-center justify-content-center">
-                                        <p class="fs-4 mb-0 fw-medium">Sie haben bereits ein Konto?</p>
-                                        <a class="text-primary fw-medium ms-2" href="./sign-in">Anmelden</a>
+                                        <p class="fs-4 mb-0 fw-medium">Already have an account?</p>
+                                        <a class="text-primary fw-medium ms-2" href="./sign-in">Sign In</a>
                                     </div>
                                 </form>
                             </div>
