@@ -239,10 +239,10 @@
         <div class="modal-body p-4">
           <div class="text-center text-warning">
             <i class="ti ti-alert-octagon fs-7"></i>
-            <h4 class="mt-2">Attention! Less credits</h4>
+            <h4 class="mt-2">Attention! Low Credits</h4>
             <p class="mt-3">
-              Your account has too less SMS credits.
-              Top up your account to
+              Your account has insufficient SMS credits.
+              Please top up your account to
               continue sending SMS...</br>
             </p>
             <button type="button" class="btn btn-light my-2" data-bs-dismiss="modal">
@@ -265,9 +265,9 @@
             <i class="ti ti-alert-octagon fs-7"></i>
             <h4 class="mt-2">ERROR!</h4>
             <p class="mt-3">
-              There was an error,
+              An error occurred,
               please try again. </br>
-              If the error occurs again, </br>
+              If the error persists, </br>
               please contact support.</br>
               (
               <?php
@@ -291,18 +291,18 @@
         <div class="modal-body p-4">
           <div class="text-center text-warning">
             <i class="ti ti-alert-octagon fs-7"></i>
-            <h4 class="mt-2">Keine SMS-Absender verfügbar!</h4>
+            <h4 class="mt-2">No SMS Sender Names Available!</h4>
             <p class="mt-3">
-              Für diesen Account existieren keine SMS-Absender. 
-              Bitte tragen Sie zuerst einen Absender ein, 
-              bevor Sie SMS versenden können.
+              There are no SMS sender names for this account.
+              Please add a sender name first
+              before sending SMS messages.
             </p>
             <div class="mt-4">
               <a href="index" class="btn btn-light me-2">
-                Zur Startseite
+                Back to Homepage
               </a>
               <a href="sms-sender" class="btn btn-warning">
-                SMS-Absender erstellen
+                Create SMS Sender
               </a>
             </div>
           </div>
