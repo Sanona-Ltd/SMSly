@@ -100,7 +100,7 @@
                           $curl = curl_init();
 
                           curl_setopt_array($curl, array(
-                            CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-send?whereRelation[sender][email]=florin.schildknecht%40sanona.org',
+                            CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/sms-send?whereRelation[sender][email]=' . $GLOBALS_USER_EMAIL,
                             CURLOPT_RETURNTRANSFER => true,
                             CURLOPT_ENCODING => '',
                             CURLOPT_MAXREDIRS => 10,
@@ -119,32 +119,32 @@
                           $data = json_decode($response, true);
 
                           if (!empty($data)) {
-                              foreach ($data as $row) {
-                                  $id = $row["id"];
-                                  $sms_from = $row["sms_from"];
-                                  $sms_to = $row["sms_to"];
-                                  $sms_message = $row["sms_message"];
-                                  $carrier_status = isset($row["carrier_status"]) ? $row["carrier_status"] : "";
-                                  $reg_date = date('H:i d.m.Y'); // Aktuelles Datum, da es nicht in der API-Antwort enthalten ist
+                            foreach ($data as $row) {
+                              $id = $row["id"];
+                              $sms_from = $row["sms_from"];
+                              $sms_to = $row["sms_to"];
+                              $sms_message = $row["sms_message"];
+                              $carrier_status = isset($row["carrier_status"]) ? $row["carrier_status"] : "";
+                              $reg_date = date('H:i d.m.Y'); // Aktuelles Datum, da es nicht in der API-Antwort enthalten ist
 
-                                  if ($carrier_status === "delivered") {
-                                      $sms_status_badge = "<span class='badge bg-success-subtle rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-check fs-4'></i>Send</span>";
-                                      $sms_status_txt = "Delivered";
-                                      $error_text = "";
-                                  } else {
-                                      $sms_status_badge = "<span class='badge bg-danger-subtle rounded-3 py-2 text-danger fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-file-alert fs-4' data-bs-toggle='tooltip' title='$carrier_status'></i>ERROR</span>";
-                                      $sms_status_txt = "Error";
-                                      $error_text = "<div class='alert alert-light-warning bg-warning-subtle bg-warning-subtle text-warning' role='alert'>
+                              if ($carrier_status === "delivered") {
+                                $sms_status_badge = "<span class='badge bg-success-subtle rounded-3 py-2 text-success fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-check fs-4'></i>Send</span>";
+                                $sms_status_txt = "Delivered";
+                                $error_text = "";
+                              } else {
+                                $sms_status_badge = "<span class='badge bg-danger-subtle rounded-3 py-2 text-danger fw-semibold fs-2 d-inline-flex align-items-center gap-1'><i class='ti ti-file-alert fs-4' data-bs-toggle='tooltip' title='$carrier_status'></i>ERROR</span>";
+                                $sms_status_txt = "Error";
+                                $error_text = "<div class='alert alert-light-warning bg-warning-subtle bg-warning-subtle text-warning' role='alert'>
                                                     <h4 class='alert-heading'>We have discovered a mistake!</h4>
                                                     <p>We have detected an error with this message.</br>
                                                     The error was reported by the system as follows: $carrier_status</br></p>
                                                     <hr>
                                                     <p class='mb-0'>If you have any questions about the error, please contact us at info@smsly.ch</p>
                                                     </div>";
-                                  }
+                              }
 
-                                  // Rest des Codes für die Tabellendarstellung bleibt gleich
-                                  echo "<tr>
+                              // Rest des Codes für die Tabellendarstellung bleibt gleich
+                              echo "<tr>
                                           <td>$id</td>
                                           <td>$sms_from</td>
                                           <td>$sms_to</td>
@@ -152,9 +152,9 @@
                                           <td>$reg_date</td>
                                           <td>...</td>
                                         </tr>";
-                              }
+                            }
                           } else {
-                              echo "<tr>
+                            echo "<tr>
                                       <td></td>
                                       <td></td>
                                       <td>No SMS sent found...</td>
@@ -213,16 +213,16 @@
     $(document).ready(function() {
       if (!$.fn.DataTable.isDataTable('#SMSHistory')) {
         $('#SMSHistory').DataTable({
-          "order": [[0, "desc"]],
+          "order": [
+            [0, "desc"]
+          ],
           "language": {
             "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/de-DE.json"
           },
-          "columnDefs": [
-            {
-              "targets": 0,
-              "type": "num"
-            }
-          ]
+          "columnDefs": [{
+            "targets": 0,
+            "type": "num"
+          }]
         });
       }
     });
