@@ -131,7 +131,7 @@ if (empty($payment_data)) {
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array('relation' => $user_id, 'title' => $product_name . 'Paket', 'description' => 'SMSly', 'quantity' => $contingent, 'type' => 'positive'),
+        CURLOPT_POSTFIELDS => array('relation' => $user_id, 'title' => $product_name . ' Paket', 'description' => 'SMSly', 'quantity' => $contingent, 'type' => 'positive'),
         CURLOPT_HTTPHEADER => array(
             'Accept: application/json',
             'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
