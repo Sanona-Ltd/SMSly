@@ -32,24 +32,30 @@
                     $diff = $now - $timestamp;
                     
                     if ($diff < 0) {
-                        // If date is in the future
-                        if ($diff > -300) { // less than 5 minutes
+                        // Wenn das Datum in der Zukunft liegt
+                        if ($diff > -300) { // weniger als 5 Minuten
                             return "Just now";
-                        } else if ($diff > -86400) { // less than 1 day
+                        } else if ($diff > -3600) { // weniger als 1 Stunde
                             return round(abs($diff) / 60) . " min ago";
-                        } else if ($diff > -432000) { // less than 5 days
+                        } else if ($diff > -86400) { // weniger als 1 Tag
+                            $hours = round(abs($diff) / 3600);
+                            return $hours . " hour" . ($hours > 1 ? "s" : "") . " ago";
+                        } else if ($diff > -432000) { // weniger als 5 Tage
                             $days = round(abs($diff) / 86400);
                             return $days . " day" . ($days > 1 ? "s" : "") . " ago";
                         } else {
                             return date("m/d/Y", $timestamp);
                         }
                     } else {
-                        // If date is in the past
-                        if ($diff < 300) { // less than 5 minutes
+                        // Wenn das Datum in der Vergangenheit liegt
+                        if ($diff < 300) { // weniger als 5 Minuten
                             return "Just now";
-                        } else if ($diff < 86400) { // less than 1 day
+                        } else if ($diff < 3600) { // weniger als 1 Stunde
                             return round($diff / 60) . " min ago";
-                        } else if ($diff < 432000) { // less than 5 days
+                        } else if ($diff < 86400) { // weniger als 1 Tag
+                            $hours = round($diff / 3600);
+                            return $hours . " hour" . ($hours > 1 ? "s" : "") . " ago";
+                        } else if ($diff < 432000) { // weniger als 5 Tage
                             $days = round($diff / 86400);
                             return $days . " day" . ($days > 1 ? "s" : "") . " ago";
                         } else {
