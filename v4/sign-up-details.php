@@ -1,4 +1,45 @@
-<?php session_start(); ?>
+<?php 
+session_start();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array(
+            'email' => $_SESSION['email'] ?? '',
+            'password' => $_SESSION['password'] ?? '',
+            'name' => $_POST['Fname'] ?? '',
+            'surname' => $_POST['Lname'] ?? '',
+            'street' => $_POST['street'] ?? '',
+            'number' => $_POST['house_number'] ?? '',
+            'zip-code' => $_POST['zip_code'] ?? '',
+            'city' => $_POST['place'] ?? '',
+            'country' => 'Switzerland',
+            'can-login' => 'Allowed',
+            'phone' => $_POST['phone'] ?? ''
+        ),
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+    
+    // Weiterleitung zur index.php nach erfolgreicher Registrierung
+    header("Location: index.php");
+    exit();
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme">
