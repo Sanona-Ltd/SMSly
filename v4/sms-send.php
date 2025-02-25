@@ -152,15 +152,29 @@
                             // Freie Eingabe erlauben
                             echo '<input type="text" class="form-control" name="smsfrom" id="smsfrom" placeholder="name@example.com" />';
                           } else {
-                            // Dropdown mit genehmigten Namen anzeigen
-                            echo '<select class="form-control" name="smsfrom" id="smsfrom">';
-                            foreach ($senderNames as $sender) {
-                              if ($sender['validation-status'] === 'Approved') {
+                            // Prüfen ob genehmigte Namen vorhanden sind
+                            $approvedSenders = array_filter($senderNames, function($sender) {
+                              return $sender['validation-status'] === 'Approved';
+                            });
+                            
+                            if (empty($approvedSenders)) {
+                              // Wenn keine genehmigten Absender vorhanden sind
+                              echo '<input type="text" class="form-control" name="smsfrom" id="smsfrom" placeholder="No approved sender names available" disabled />';
+                              echo '<script>
+                                    document.addEventListener("DOMContentLoaded", (event) => {
+                                      const modalElement = new bootstrap.Modal(document.getElementById("no-sender-alert"));
+                                      modalElement.show();
+                                    });
+                                    </script>';
+                            } else {
+                              // Dropdown mit genehmigten Namen anzeigen
+                              echo '<select class="form-control" name="smsfrom" id="smsfrom">';
+                              foreach ($approvedSenders as $sender) {
                                 echo '<option value="' . htmlspecialchars($sender['sender-name']) . '">' . 
                                      htmlspecialchars($sender['sender-name']) . '</option>';
                               }
+                              echo '</select>';
                             }
-                            echo '</select>';
                           }
                           ?>
                           <label for="smsfrom">SMS Sender</label>
