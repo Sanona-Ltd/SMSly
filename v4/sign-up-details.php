@@ -70,6 +70,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $response = curl_exec($curl);
     curl_close($curl);
 
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/account-movements',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array('relation' => $updateID, 'title' => 'Freebie', 'description' => 'Freebie erhalten', 'quantity' => '10', 'type' => 'positive'),
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+        ),
+    ));
+
+    $response = curl_exec($curl);
+
+    curl_close($curl);
+    // echo $response;
+
+
     // Weiterleitung zur index.php nach erfolgreicher Registrierung
     header("Location: index.php");
     exit();
