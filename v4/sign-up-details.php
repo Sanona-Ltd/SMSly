@@ -40,7 +40,7 @@
                                     <img src="./assets/images/logo.png" class="light-logo" alt="Logo-light" />
                                 </a>
 
-                                <form class="">
+                                <form method="POST" action="">
                                     <div class="d-flex flex-column gap-sm-7 gap-3">
                                         <div class="d-flex flex-sm-row flex-column gap-sm-7 gap-3">
                                             <div class="d-flex flex-column flex-grow-1 gap-2">
@@ -70,33 +70,33 @@
                                         <hr>
                                         <div class="d-flex flex-sm-row flex-column gap-sm-7 gap-3">
                                             <div class="d-flex flex-column flex-grow-1 gap-2">
-                                                <label for="Fname" class="fs-3 fw-semibold text-dark">
+                                                <label for="street" class="fs-3 fw-semibold text-dark">
                                                     Street *
                                                 </label>
-                                                <input type="text" name="Fname" id="Fname" placeholder="First Name"
+                                                <input type="text" name="street" id="street" placeholder="Street"
                                                     class="form-control" spellcheck="false" data-ms-editor="true">
                                             </div>
                                             <div class="d-flex flex-column flex-grow-1 gap-2">
-                                                <label for="Lname" class="fs-3 fw-semibold text-dark">
+                                                <label for="house_number" class="fs-3 fw-semibold text-dark">
                                                     House Number *
                                                 </label>
-                                                <input type="text" name="Lname" id="Lname" placeholder="Last name"
+                                                <input type="text" name="house_number" id="house_number" placeholder="House number"
                                                     class="form-control" spellcheck="false" data-ms-editor="true">
                                             </div>
                                         </div>
                                         <div class="d-flex flex-sm-row flex-column gap-sm-7 gap-3">
                                             <div class="d-flex flex-column flex-grow-1 gap-2">
-                                                <label for="Fname" class="fs-3 fw-semibold text-dark">
+                                                <label for="place" class="fs-3 fw-semibold text-dark">
                                                     Place *
                                                 </label>
-                                                <input type="text" name="Fname" id="Fname" placeholder="First Name"
+                                                <input type="text" name="place" id="place" placeholder="Place"
                                                     class="form-control" spellcheck="false" data-ms-editor="true">
                                             </div>
                                             <div class="d-flex flex-column flex-grow-1 gap-2">
-                                                <label for="Lname" class="fs-3 fw-semibold text-dark">
+                                                <label for="zip_code" class="fs-3 fw-semibold text-dark">
                                                     Zip Code *
                                                 </label>
-                                                <input type="text" name="Lname" id="Lname" placeholder="Last name"
+                                                <input type="text" name="zip_code" id="zip_code" placeholder="Zip code"
                                                     class="form-control" spellcheck="false" data-ms-editor="true">
                                             </div>
                                         </div>

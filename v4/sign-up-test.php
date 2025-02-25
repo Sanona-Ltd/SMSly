@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'zip-code' => '',
             'city' => '',
             'country' => 'Switzerland',
-            'can-login' => 'Allowed',
+            'can-login' => 'Registration',
             'sms_contingent' => '10',
             'own-sender' => 'No',
             'rank' => 'Customer',
