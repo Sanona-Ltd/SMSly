@@ -13,12 +13,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['EMAIL'];
     $password = $_POST['PASSWORD'];
 
-    // Hier können Sie später die Passwort-Validierung und Benutzerregistrierung implementieren
+    // UUID v7 generieren
+    $uuid = sprintf(
+        '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0x0fff) | 0x7000,
+        mt_rand(0, 0x3fff) | 0x8000,
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff),
+        mt_rand(0, 0xffff)
+    );
 
-    // Vorübergehende Erfolgsmeldung
-    $_SESSION["successText"] = "Vielen Dank für Ihre Registrierung! Wir werden Sie benachrichtigen, sobald SMSly.ch verfügbar ist.";
+    $curl = curl_init();
 
-    header("Location: " . $_SERVER['PHP_SELF']);
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/user',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array(
+            'email' => $email,
+            'password' => $password,
+            'name' => '',
+            'surname' => '',
+            'street' => '',
+            'number' => '',
+            'address-suffix' => '',
+            'zip-code' => '',
+            'city' => '',
+            'country' => 'Switzerland',
+            'can-login' => 'Allowed',
+            'sms_contingent' => '10',
+            'own-sender' => 'No',
+            'rank' => 'Customer',
+            'verified' => 'false',
+            'stripe_identity' => '',
+            'api_key' => '',
+            'api_secret' => '',
+            'registration-key' => $uuid
+        ),
+        CURLOPT_HTTPHEADER => array(
+            'Accept: application/json',
+            'Authorization: Bearer hYNIyTLFG1eHQ2ap146I3ENmZ6Ct6OpsghpyySOB'
+        ),
+    ));
+
+    $response = curl_exec($curl);
+    curl_close($curl);
+
+    // Nach erfolgreicher Registrierung zur Detailseite weiterleiten
+    header("Location: sign-up-details.php?key=" . $uuid);
     exit();
 }
 ?>
