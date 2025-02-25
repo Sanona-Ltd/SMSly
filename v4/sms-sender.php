@@ -75,14 +75,16 @@
                 <div class="card">
                   <div class="card-body">
                     <div class="mb-2">
-                      <h5 class="card-title">
-                        SMS Sender Names
-                        <p>
+                      <div class="row">
+                        <div class="col-12">
+                          <h5 class="card-title">
+                            SMS Sender Names
+                          </h5>
                           <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#addSenderModal">
                             Neuen Absender hinzufügen
                           </button>
-                        </p>
-                      </h5>
+                        </div>
+                      </div>
 
                     </div>
                     <div class="table-responsive">
