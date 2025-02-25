@@ -150,8 +150,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         } else {
                             header("Location: /v4");
                         }
-
                         exit;
+
+                    /* case "Registration":
+                        // Weiterleitung zur Details-Seite mit dem registration-key
+                        header("Location: sign-up-details.php?key=" . $user->{'registration-key'});
+                        exit; */
                         
                     case "Disallowed":
                         $loginManager->handleLoginError("00.200.01");
@@ -255,12 +259,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form action="" method="post" id="loginForm">
                   <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                   <div class="mb-3">
-                    <label for="email" class="form-label">E-Mail</label>
+                    <label for="email" class="form-label">Email</label>
                     <input type="email" name="email" class="form-control" id="email" 
                            required autocomplete="email">
                   </div>
                   <div class="mb-4">
-                    <label for="password" class="form-label">Passwort</label>
+                    <label for="password" class="form-label">Password</label>
                     <input type="password" name="password" class="form-control" id="password" 
                            required autocomplete="current-password">
                   </div>
@@ -269,10 +273,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <!-- <a class="text-primary fw-medium" href="./main/authentication-forgot-password.html">Forgot Password ?</a> -->
                   </div>
-                  <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Anmelden</button>
+                  <button type="submit" class="btn btn-primary w-100 py-8 mb-4 rounded-2">Sign In</button>
                   <div class="d-flex align-items-center justify-content-center">
-                    <p class="fs-4 mb-0 fw-medium">Neu bei SMSly.ch?</p>
-                    <a class="text-primary fw-medium ms-2" href="./sign-up">Account erstellen</a>
+                    <p class="fs-4 mb-0 fw-medium">New to SMSly.ch?</p>
+                    <a class="text-primary fw-medium ms-2" href="./sign-up">Create Account</a>
                   </div>
                 </form>
               </div>
@@ -302,13 +306,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       
       if (!email || !password) {
           e.preventDefault();
-          alert('Bitte füllen Sie alle Felder aus.');
+          alert('Please fill in all fields.');
           return;
       }
       
       if (password.length < 8) {
           e.preventDefault();
-          alert('Das Passwort muss mindestens 8 Zeichen lang sein.');
+          alert('Password must be at least 8 characters long.');
           return;
       }
   });
