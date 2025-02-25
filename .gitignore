@@ -1,4 +1,4 @@
 # Composer
-/vendor/
-composer.json
-composer.lock
+app/vendor/
+app/composer.json
+app/composer.lock
