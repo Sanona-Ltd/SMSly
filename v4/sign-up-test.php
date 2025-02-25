@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                                 <div class='alert alert-light-info bg-info-subtle bg-info-subtle text-info' role='alert'>
                                     <h4 class='alert-heading'>Beta Version</h4>
-                                    <p>Aktuell ist ist SMSly.ch nur in der Beta Version verfügbar. Wir arbeiten daran, dass Sie bald wieder auf Ihre SMSly.ch zugreifen können. Trage deine Email ein und wir werden dich benachrichtigen, sobald SMSly.ch wieder verfügbar ist.</p>
+                                    <p>Aktuell ist ist SMSly.ch nur in der Beta Version verfügbar. Es können fehler auftreten. Wir bitten um Verständnis.</p>
                                 </div>
 
                                 <form method="post" action="">
