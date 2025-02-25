@@ -8,7 +8,7 @@
 
                 $curl = curl_init();
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/payments?whereRelation[user][email]=florin.schildknecht%40sanona.org&timestamps=null',
+                    CURLOPT_URL => 'https://db.sanona.org/api/b872c5a521a44cc0983443494237e81e/account-movements?whereRelation[relation][email]=florin.schildknecht%40sanona.org',
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,
@@ -24,10 +24,9 @@
                 $response = curl_exec($curl);
                 curl_close($curl);
                 
-                $payments = json_decode($response, true);
+                $movements = json_decode($response, true);
                 
-                foreach($payments as $payment) {
-                    if($payment['payment_status'] === 'paid' && $payment['contingent_added'] === 'true') {
+                foreach($movements as $movement) {
                 ?>
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <div class="d-flex">
@@ -35,14 +34,13 @@
                                 <img src="./app/plus.svg" alt="" class="img-fluid" width="24" height="24">
                             </div>
                             <div>
-                                <h6 class="mb-1 fs-4 fw-semibold"><?php echo $payment['product_name']; ?></h6>
-                                <p class="fs-3 mb-0"><?php echo date('d.m.Y', strtotime($payment['payment_date'])); ?></p>
+                                <h6 class="mb-1 fs-4 fw-semibold"><?php echo $movement['title']; ?></h6>
+                                <p class="fs-3 mb-0"><?php echo $movement['description']; ?></p>
                             </div>
                         </div>
-                        <h6 class="mb-0 fw-semibold">+<?php echo $payment['contingent']; ?> Credits</h6>
+                        <h6 class="mb-0 fw-semibold"><?php echo ($movement['type'] === 'positive' ? '+' : '-') . $movement['quantity']; ?> Credits</h6>
                     </div>
                 <?php
-                    }
                 }
                 ?>
             </div>
